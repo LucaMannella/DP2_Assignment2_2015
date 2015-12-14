@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="build" name="WF-2">
+	<description>
+			Script for WF Assignment 2
+	</description>
+
+	<!-- The "WFMonitorFactory" used for WFInfo and as data generator for tests -->
+	<property name="WFInfo.WFMonitorFactory" value="it.polito.dp2.WF.Random.WorkflowMonitorFactoryImpl" />
+
+	<!-- The default output file for WFInfoSerializer -->
+	<property name="output" location="${java.io.tmpdir}/out1.xml"/>
+
+	<!-- The default test case -->
+	<property name="testcase" value="0" />
+	<!-- The default test class -->
+	<property name="test.class" value="it.polito.dp2.WF.lab2.tests.WFTests" />
+
+	<property name="lab2.location" location="." />
+	<property name="src.dir" location="${lab2.location}/src" />
+	<property name="build.dir" location="${lab2.location}/build" />
+	<property name="lib.dir" location="${lab2.location}/lib" />
+	<property name="gen.dir" location="${lab2.location}/generated" />
+	<property name="schema.dir" location="${lab2.location}/xsd" />
+
+	<property name="debug" value="true" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.7" />
+	<property name="source" value="1.7" />
+
+	<!-- The classpath to be used for compilation of the solution -->
+	<path id="WF.classpath">
+		<pathelement location="${lib.dir}/WF.jar" />
+	</path>
+	
+	<!-- Target setseed -->
+	<target name="setseed" unless="seed">
+		<tstamp>
+			<format property="seed" pattern="HHmmss" />
+		</tstamp>
+	</target>
+	
+	<!-- Target init -->
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${gen.dir}" />
+	</target>
+
+	<!-- Target chk-bindings -->
+	<target name="-chk-bindings">
+		<uptodate property="generate-bindings.notRequired" targetfile="${gen.dir}/.flagfile">
+			<srcfiles dir="${schema.dir}" includes="**/*.xsd" />
+		</uptodate>
+	</target>
+
+	<!-- Target generate-bindings -->
+	<target name="generate-bindings" unless="generate-bindings.notRequired" depends="init,-chk-bindings">
+		<exec executable="xjc" failonerror="true" >
+			<arg value="-d" />
+			<arg value="${gen.dir}" />
+			<arg value="-p" />
+			<arg value="it.polito.dp2.WF.sol2.jaxb" />
+			<arg value="${schema.dir}/WFInfo.xsd" />
+		</exec>
+		<touch file="${gen.dir}/.flagfile" />
+	</target>
+
+	<!-- Target clean -->
+	<target name="clean" description="Clean all">
+		<delete dir="${build.dir}" />
+		<delete dir="${gen.dir}" />
+		<delete includeemptydirs="true">
+		    <fileset dir="${lab2.location}" defaultexcludes="false">
+		       <include name="temp*/**" />
+		    </fileset>
+		</delete>
+		<delete file="${lab2.location}/lab2.zip"/>
+	</target>
+
+	<!-- Target build -->
+	<target name="build" depends="init, generate-bindings" description="Build the solution of Assignment 2">
+		<echo>Building the submitted solution (if needed)...</echo>
+		<javac 
+			destdir="${build.dir}"
+			debug="${debug}"
+			debuglevel="${debuglevel}"
+			source="${source}"
+			target="${target}"
+			includeantruntime="false">
+				<src path="${src.dir}"/>
+				<src path="${gen.dir}"/>
+				<include name="it/polito/dp2/WF/sol2/**" />
+				<classpath>
+					<path refid="WF.classpath" />
+				</classpath>
+		</javac>
+		<echo>Done.</echo>
+	</target>
+
+	<target name="buildWFInfo">
+		<echo>Building WFInfo (if needed)...</echo>
+		<mkdir dir="${build.dir}" />
+		<javac 
+			destdir="${build.dir}"
+			debug="${debug}"
+			debuglevel="${debuglevel}"
+			source="${source}"
+			target="${target}"
+			includeantruntime="false">
+				<src path="${src.dir}" />
+				<include name="it/polito/dp2/WF/lab1/WFInfo.java" />
+				<classpath>
+					<path refid="WF.classpath" />
+				</classpath>
+		</javac>
+		<echo>Done.</echo>
+	</target>
+
+	<target name="WFInfo" depends="buildWFInfo, setseed">
+		<java classname="it.polito.dp2.WF.lab1.WFInfo" failonerror="true" fork="yes">
+			<sysproperty key="it.polito.dp2.WF.Random.seed" value="${seed}"/>
+			<sysproperty key="it.polito.dp2.WF.Random.testcase" value="${testcase}"/>
+			<sysproperty key="it.polito.dp2.WF.WorkflowMonitorFactory" value="${WFInfo.WFMonitorFactory}"/>
+			<classpath>
+				<path refid="WF.classpath" />
+				<pathelement location="${lib.dir}/WFRandom.jar"/>
+				<pathelement path="${build.dir}"/>
+			</classpath>
+		</java>
+	</target>
+
+	<!-- Target WFInfoSerializer -->
+	<target name="WFInfoSerializer" depends="setseed">
+		<echo>Output file: ${output}</echo>
+		<echo>Testcase: ${testcase}</echo>
+		<echo>Seed: ${seed}</echo>
+		<echo />
+		<antcall target="WFInfoSerializer.test">
+			<param name="outfile" value="${output}" />
+		</antcall>
+	</target>
+	
+	<!-- Target renFuncTest -->
+	<target name="runFuncTest" depends="setseed">
+		<antcall target="runFuncTest.real">
+			<param name="test.class" value="${test.class}" />
+			<param name="exit.code" value="126" />
+		</antcall>
+	</target>
+
+	<!-- Target WFInfoSerializer.test -->
+	<target name="WFInfoSerializer.test" depends="build">
+		<java classname="it.polito.dp2.WF.sol2.WFInfoSerializer" failonerror="true" fork="yes">
+			<sysproperty key="it.polito.dp2.WF.WorkflowMonitorFactory" value="${WFInfo.WFMonitorFactory}" />
+			<sysproperty key="it.polito.dp2.WF.Random.seed" value="${seed}"/>
+			<sysproperty key="it.polito.dp2.WF.Random.testcase" value="${testcase}"/>
+			<arg value="${outfile}" />
+			<classpath>
+				<path refid="WF.classpath" />
+				<pathelement location="${lib.dir}/WFRandom.jar"/>
+				<pathelement path="${build.dir}" />
+			</classpath>
+		</java>
+		<echo>Done.</echo>
+	</target>
+	
+	<target name="runFuncTest.real" depends="build">
+		<tempfile property="temp.dir" destdir="${lab2.location}" prefix="temp"/>
+		<tempfile property="temp.xmlfile" destdir="${temp.dir}" prefix="out" suffix=".xml"/>
+
+		<echo>The tests will run using '${temp.dir}' as working directory.</echo>
+		<echo>Testcase: ${testcase}</echo>
+		<echo>Seed: ${seed}</echo>
+		<echo />
+		<echo>Copying the xsd/WFInfo.xsd file to the working directory...</echo>
+		<copy file="${schema.dir}/WFInfo.xsd" todir="${temp.dir}/xsd"/>
+		<echo>File copied.</echo>
+
+		<antcall target="WFInfoSerializer.test">
+			<param name="outfile" value="${temp.xmlfile}"/>
+		</antcall>
+		
+		<echo>Validating the generated XML file: ${temp.xmlfile}</echo>
+		<java fork="yes" classname="it.polito.dp2.lab2.xml.XMLSchemaValidator" failonerror="false" dir="${temp.dir}" resultproperty="validation_result">
+			<arg path="${temp.dir}/xsd/WFInfo.xsd"/>
+			<arg path="${temp.xmlfile}"/>
+			<classpath>
+				<pathelement location="${lib.dir}/lab2.jar"/>
+			</classpath>
+		</java>
+		<fail status="125" message="*** XML validation FAILED ***">
+			<condition>
+				<not>
+					<equals arg1="0" arg2="${validation_result}"/>
+				</not>
+			</condition>
+		</fail>
+		<echo>*** XML file validated ***</echo>
+
+		<junit printsummary="yes" dir="${temp.dir}" fork="yes" haltonfailure="no" showoutput="no" filtertrace="true">
+			<sysproperty key="it.polito.dp2.WF.Random.testcase" value="${testcase}"/>
+			<sysproperty key="it.polito.dp2.WF.Random.seed" value="${seed}"/>
+			<sysproperty key="it.polito.dp2.WF.sol2.WorkflowInfo.file " value="${temp.xmlfile}"/>
+			<formatter type="brief" usefile="false"/>
+			<test haltonfailure="no" failureproperty="test_failed" name="${test.class}"/>
+			<classpath>
+				<path refid="WF.classpath" />
+				<pathelement location="${lib.dir}/WFRandom.jar"/>
+				<pathelement path="${build.dir}" />
+				<pathelement location="${lib.dir}/lab2.jar"/>
+				<pathelement location="${lib.dir}/junit-4.5.jar"/>
+			</classpath>
+		</junit>
+		<fail if="test_failed" status="${exit.code}" message="*** Some Tests FAILED ***"/>
+		<echo>*** All Tests PASSED  ***</echo>
+		<delete dir="${temp.dir}"/>
+	</target>
+	
+	<!-- Target make-final-zip for building the final zip containing the solution -->
+	<target name="make-final-zip">
+		<zip destfile="lab2.zip"
+			basedir="${lab2.location}"
+		    includes="src/it/polito/dp2/WF/sol2/**/*.java xsd/*"
+		/>
+	</target>
+
+</project>
