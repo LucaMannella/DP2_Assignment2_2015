@@ -13,30 +13,44 @@
 			</all>
 		</complexType>
 		
-		<key name="workflow_key">			<!-- Assegna un valore univoco al nome del workflow !-->
+		<!-- Each workflow has a unique @name !-->
+		<key name="workflow_key">			
 			<selector xpath="workflow" />
 			<field xpath="@name" />
 		</key>
-		<keyref name="workflow_ref" refer="workflow_key">	<!-- Assegna all'attributo !-->
+		<!-- The attribute workflow inside process points to a workflow element !-->
+		<keyref name="workflow_ref" refer="workflow_key">	
 			<selector xpath="process" />
 			<field xpath="@workflow" />
 		</keyref>
 		
-		
-		<key name="action_key">
-			<selector xpath="workflow/action" />
-			<field xpath="@name" />
-		</key>		<!-- FINIRE QUI LA GESTIONE DELLA CHIAVE -->
+		<!-- The attribute action inside an action_status points to an action element !-->
 		<keyref name="action_key_ref" refer="action_key">
-    	    <selector xpath="host/interface/reachable"></selector>
-    	    <field xpath="@ref"/>
+    	    <selector xpath="process/action_status" />
+    	    <field xpath="@action" />
     	</keyref>
-		
-		
+    	
+    	<!-- Each process has a unique @code !-->
+		<key name="process_key">			
+			<selector xpath="process" />
+			<field xpath="@code" />
+		</key>
+    	<!-- Each department has a unique name !-->
+		<key name="actors_key">			
+			<selector xpath="actors" />
+			<field xpath="@department" />
+		</key>
 	</element>
 	
 	
 	<element name="workflow">
+		
+		<!-- Each key has a unique name inside its workflow -->
+		<key name="action_key">
+			<selector xpath="action" />
+			<field xpath="@name" />
+		</key>
+		
 		<complexType>
 			<sequence>
 				<element name="action" minOccurs="1" maxOccurs="unbounded"> 
@@ -56,9 +70,6 @@
 										<element ref="wf:workflow" />
 									</sequence>
 								</complexType>
-								
-								
-								
 							</element>
 						</choice>
 						
@@ -80,35 +91,39 @@
 			<sequence>
 				<element name="action_status" minOccurs="1" maxOccurs="unbounded">
 					<complexType>
-						<sequence>
-							<element ref="wf:action" />
-							<element ref="wf:actor" />
-						</sequence>
-						
-						<attribute name="timestamp" type="dateTime" default="1970-01-01T00:00:00"/>
+						<attribute name="action" type="token" use="required" />
+						<attribute name="actor" type="token" use="optional" />
+						<attribute name="timestamp" type="dateTime" use="optional" />
 						<attribute name="isTerminated" type="boolean" use="required" />
 						<attribute name="isTakenInCharge" type="boolean" use="required" />
 					</complexType>
 				</element>
 			</sequence>
 			
-			<attribute name="code" type="token" />	<!-- TODO: Inserire restizione stringa e vincolo univocità -->
+			<attribute name="code" type="token" />
 			<attribute name="started" type="dateTime" use="required" /> 
 			<attribute name="workflow" type="token" use="required" />
 		</complexType>
 	</element>
 
-	<element name="actors">
+	<element name="actors">	
 		<complexType>
 			<sequence>
 				<element name="actor">
 					<complexType>
-						<attribute name="name" use="required" />	<!-- Vincolo di univocità -->
-						<attribute name="role" use="required" />
+						<attribute name="name" type="token" use="required" />
+						<attribute name="role" type="token" use="required" />
 					</complexType>
 				</element>
 			</sequence>
+			<attribute name="department" type="token" use="optional"/>
 		</complexType>
+		
+		<!-- Each actor has a unique @name !-->
+		<key name="actor_key">			
+			<selector xpath="actor" />
+			<field xpath="@name" />
+		</key>
 	</element>
 	
 </schema>
