@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/WFInfo" xmlns:wf="http://www.example.org/WFInfo" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://lucamannella.altervista.org/WFInfo" xmlns:wf="http://lucamannella.altervista.org/WFInfo" elementFormDefault="qualified">
 	<annotation>
-		<documentation> This is an XML Schema for a Workflow Management System </documentation>
+		<documentation> This is an XML Schema for a Workflow Management System. </documentation>
 	</annotation>
 	
 	<element name="WorkflowMonitor">
 		<complexType>
-			<all>	<!-- The mexOccurs of the contained elements is "ubounded" -->
+			<all>	<!-- The mexOccurs of the contained elements is "unbounded" -->
 				<element ref="wf:workflow" minOccurs="0" />
 				<element ref="wf:process" minOccurs="0" />
 				<element ref="wf:actors" minOccurs="0" />
 			</all>
 		</complexType>
+		
+		<key name="workflow_key">			<!-- Assegna un valore univoco al nome del workflow !-->
+			<selector xpath="workflow" />
+			<field xpath="@name" />
+		</key>
+		<keyref name="workflow_ref" refer="workflow_key">	<!-- Assegna all'attributo !-->
+			<selector xpath="process" />
+			<field xpath="@workflow" />
+		</keyref>
+		
+		
+		<key name="action_key">
+			<selector xpath="workflow/action" />
+			<field xpath="@name" />
+		</key>		<!-- FINIRE QUI LA GESTIONE DELLA CHIAVE -->
+		<keyref name="action_key_ref" refer="action_key">
+    	    <selector xpath="host/interface/reachable"></selector>
+    	    <field xpath="@ref"/>
+    	</keyref>
+		
+		
 	</element>
+	
 	
 	<element name="workflow">
 		<complexType>
@@ -34,6 +56,9 @@
 										<element ref="wf:workflow" />
 									</sequence>
 								</complexType>
+								
+								
+								
 							</element>
 						</choice>
 						
@@ -48,11 +73,11 @@
 			<attribute name="name" type="token" use="required" />	<!-- TODO: Inserire vincolo di univocità -->
 		</complexType>
 	</element>
+
 	
 	<element name="process">
 		<complexType>
 			<sequence>
-				<element ref="wf:workflow" />
 				<element name="action_status" minOccurs="1" maxOccurs="unbounded">
 					<complexType>
 						<sequence>
@@ -69,6 +94,7 @@
 			
 			<attribute name="code" type="token" />	<!-- TODO: Inserire restizione stringa e vincolo univocità -->
 			<attribute name="started" type="dateTime" use="required" /> 
+			<attribute name="workflow" type="token" use="required" />
 		</complexType>
 	</element>
 
