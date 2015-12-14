@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/WFInfo" xmlns:wf="http://www.example.org/WFInfo" elementFormDefault="qualified">
+	<annotation>
+		<documentation> This is an XML Schema for a Workflow Management System </documentation>
+	</annotation>
+	
+	<element name="WorkflowMonitor">
+		<complexType>
+			<all>	<!-- The mexOccurs of the contained elements is "ubounded" -->
+				<element ref="wf:workflow" minOccurs="0" />
+				<element ref="wf:process" minOccurs="0" />
+				<element ref="wf:actors" minOccurs="0" />
+			</all>
+		</complexType>
+	</element>
+	
+	<element name="workflow">
+		<complexType>
+			<sequence>
+				<element name="action" minOccurs="1" maxOccurs="unbounded"> 
+					<complexType>
+						<choice>
+							<element name="simple_action">
+								<complexType>
+									<sequence>
+										<element ref=wf:action minOccurs="0" maxOccurs="unbounded" />
+									</sequence>
+								</complexType>
+							</element>
+							
+							<element name="process_action">
+								<complexType>
+									<sequence>
+										<element ref="wf:workflow" />
+									</sequence>
+								</complexType>
+							</element>
+						</choice>
+						
+						<attribute name="name" type="token" use="required" />	<!-- TODO: Inserire vincolo di univocità all'interno del workflow -->
+						<attribute name="role" type="token" use="required" />
+						<attribute name="automInst" type="boolean" default="false" />
+					</complexType>
+				</element>
+			</sequence>
+			
+			<!-- Può essere una bella idea inserire un riferimento ai processi -->
+			<attribute name="name" type="token" use="required" />	<!-- TODO: Inserire vincolo di univocità -->
+		</complexType>
+	</element>
+	
+	<element name="process">
+		<complexType>
+			<sequence>
+				<element ref="wf:workflow" />
+				<element name="action_status" minOccurs="1" maxOccurs="unbounded">
+					<complexType>
+						<sequence>
+							<element ref="wf:action" />
+							<element ref="wf:actor" />
+						</sequence>
+						
+						<attribute name="timestamp" type="dateTime" default="1970-01-01T00:00:00"/>
+						<attribute name="isTerminated" type="boolean" use="required" />
+						<attribute name="isTakenInCharge" type="boolean" use="required" />
+					</complexType>
+				</element>
+			</sequence>
+			
+			<attribute name="code" type="token" />	<!-- TODO: Inserire restizione stringa e vincolo univocità -->
+			<attribute name="started" type="dateTime" use="required" /> 
+		</complexType>
+	</element>
+
+	<element name="actors">
+		<complexType>
+			<sequence>
+				<element name="actor">
+					<complexType>
+						<attribute name="name" use="required" />	<!-- Vincolo di univocità -->
+						<attribute name="role" use="required" />
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+	
+</schema>
