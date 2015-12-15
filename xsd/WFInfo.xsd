@@ -55,27 +55,7 @@
 			<sequence>
 				<element name="action" minOccurs="1" maxOccurs="unbounded"> 
 					<complexType>
-						<choice>
-							<element name="simple_action">
-								<complexType>
-									<sequence>
-										<element ref=wf:action minOccurs="0" maxOccurs="unbounded" />
-									</sequence>
-								</complexType>
-							</element>
-							
-							<element name="process_action">
-								<complexType>
-									<sequence>
-										<element ref="wf:workflow" />
-									</sequence>
-								</complexType>
-							</element>
-						</choice>
 						
-						<attribute name="name" type="token" use="required" />	<!-- TODO: Inserire vincolo di univocità all'interno del workflow -->
-						<attribute name="role" type="token" use="required" />
-						<attribute name="automInst" type="boolean" default="false" />
 					</complexType>
 				</element>
 			</sequence>
@@ -125,5 +105,6 @@
 			<field xpath="@name" />
 		</key>
 	</element>
+	
 	
 </schema>
