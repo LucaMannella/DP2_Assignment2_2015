@@ -1,9 +1,12 @@
+# Generated Files
 *.class
+build/
+generated/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package Files
 *.war
 *.ear
 
