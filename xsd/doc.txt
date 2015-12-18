@@ -1,0 +1,44 @@
+This project was developed by Luca Mannella for the Assignment 2 of the course Distributed Programming II in Politechnic University of Turin.
+
+This W3C XML Schema is an implementation of a Workflow Management System.
+The root is called "WorkflowMonitor" it does not have any attribute and it can contains 3 different types of element (that are complex types) from 0 to unbounded: "workflow", "process" and "actors".
+
+
+In our system we have a workflow that is a representation of a set of actions that one actor (or more actors) can perform.
+The "workflow" is characterized by a sequence of actions (of type "action_type") and one attributed called name of type "token".
+On the attribute "name" is created a key called "workflow_key" which uniquely identifies it inside the WorkflowMonitor element.
+
+Every action has several attributes:
+- the "name" of the action of type token
+- the actor's "role" that can perform that particular action (again of type token)
+- a boolean attribute called "automInst" that says if that action will be automatically instanciated or not
+- an "id" attribute of type "ID" that is built in this way: "WorkflowName_ActionName", to guarantee an unambiguous pointer for the "process_action"s.
+On the attribute "name" (inside the element "workflow") is created a key called "action_key" which uniquely identifies it inside the workflow element.
+Inside the "action_type" there is also a "choice" element that can contain a "simple_action" or a "process_action".
+
+A "simple_action" is a completType that contains just one attribute, an IDREFS (called nextActions) that will point to a set of actions that could be performed after the end of that particular action.
+A "process_action" is another complex type that contains again just one attribute called nextProcess of type "token".
+On that field is created a keyref called "workflow_action_key" that refers the key "workflow_key" to having a pointer to the name of the nested workflow that have to be executed.
+
+
+A "process" is a completType composed by a sequence of element "action_status" and several attributes.
+The attributes are the timestamp in which the workflow was started called "started" of type "dateTime" and a token called "workflow" that is the name of the instanciated workflow.
+I add another attribute called "code" of type token" on which I create a key called "process_key" that uniquely identifies it inside the WorkflowMonitor.
+Even if this code is not required by the specification I think that could be usefull for a future expansion of the application (for example could be usefull inside a Database).
+Because the process is an instance of a particular workflow I create also a keyref called "workflow_ps_ref" that references the key "workflow_key" to having a pointer to the relative "workflow" entity.
+
+Every process can contains 1 or more "action_status" (that is a complexType with several attributes).
+An action_status is an instance of a particular action contained inside the workflow that is represented by the process to whom this action belongs to.
+The attributes are the name of the action called simply "action" and the actor's name assigned to that particular action called simply "actor" (optional), both of type token.
+There is an attribute timestamp of type "dateTime" (optional) that contains the timestamp in which the action is terminated.
+There are also two boolean attribute that are called "isTerminated" and "isTakenInCharge" that bring informations about the status of the action.
+On the field "actor" is built a keyref called "actor_key_ref" thar referenrences the key "action_key" to guarantee that every actor is present inside the XML document.
+
+
+The last element of the "WorkflowMonitor" is the element "actors" a completType that contains a sequence of elements "actor" and one attribute.
+That attribute is a token called "deparment" that is optional (because it is not required inside the specifications). That field could be used to divide the actors in different groups called deparments.
+On deparment attribute I create a key called "actors_key" so every department has a unique name.
+This is not a text specification but I think that it could be usefull to a more complex application.
+
+An "actor" is characterized by two "token" attributes: a name, which uniquely identifies it (thanks to key "actor_key"), and a role.
+I choose to represent also the actors like entities because I think that could be a good way for having a program easy to extend to new features.
