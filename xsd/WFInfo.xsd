@@ -34,6 +34,11 @@
     	    <selector xpath="process/action_status" />
     	    <field xpath="@action" />
     	</keyref>
+    	<!-- insert a comment -->
+    	<keyref name="actor_key_ref" refer="wf:actor_key">
+    		<selector xpath="process/action_status" />
+    		<field xpath="@actor" />
+    	</keyref>
     	
     	<!-- Each process has a unique @code !-->
 		<key name="process_key">			
