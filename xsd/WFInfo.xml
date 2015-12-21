@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- <?xml-stylesheet type="text/xsl" href="style.xsl"?> -->
-<wf:WorkflowMonitor 
+<wf:WorkflowManager 
 	xmlns:wf="http://lucamannella.altervista.org/WFInfo" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://lucamannella.altervista.org/WFInfo WFInfo.xsd ">
@@ -103,7 +103,7 @@
 		<wf:actor name="Andrew_Silver" role="Warehouseman"/>
 	</wf:actors>
 
-</wf:WorkflowMonitor>
+</wf:WorkflowManager>
 
 <!-- This XML file was developed by Luca Mannella for the Assignment 2
 	 of the course Distributed Programming II in Politechnic University of Turin. -->

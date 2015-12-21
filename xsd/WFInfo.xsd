@@ -4,7 +4,7 @@
 		<documentation> This is an XML Schema for a Workflow Management System. </documentation>
 	</annotation>
 	
-	<element name="WorkflowMonitor">
+	<element name="WorkflowManager">
 		<complexType>
 			<sequence>
 				<element ref="wf:workflow" minOccurs="0" maxOccurs="unbounded" />
