@@ -8,20 +8,19 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.SchemaFactoryConfigurationError;
 
 import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 import it.polito.dp2.WF.ActionStatusReader;
 import it.polito.dp2.WF.FactoryConfigurationError;
@@ -30,7 +29,6 @@ import it.polito.dp2.WF.WorkflowMonitor;
 import it.polito.dp2.WF.WorkflowMonitorException;
 import it.polito.dp2.WF.WorkflowMonitorFactory;
 import it.polito.dp2.WF.WorkflowReader;
-import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Actors;
 import it.polito.dp2.WF.sol2.jaxb.ObjectFactory;
 import it.polito.dp2.WF.sol2.jaxb.Process;
@@ -170,8 +168,10 @@ public class WFInfoSerializer {
 		return root;
 	}
 
-	private Set<Workflow> createWorkflows(Set<WorkflowReader> set) {
-		/*for( WorkflowReader wf : set ) {
+	private Set<Workflow> createWorkflows(Set<WorkflowReader> workflows) {
+		Set<Workflow> newWorkflows = new HashSet<Workflow>();
+	/*	
+		for( WorkflowReader wf : workflows ) {
 			String wfName = wf.getName();
 			
 			Workflow workflow = objFactory.createWorkflow();
@@ -199,8 +199,9 @@ public class WFInfoSerializer {
 				else
 					System.err.println("Error! The ActionReader belongs to a not known type! \n");
 			}
-		} */
-		return null;
+		}
+		*/
+		return newWorkflows;
 	}
 
 	/**
@@ -214,9 +215,18 @@ public class WFInfoSerializer {
 	
 		for (ProcessReader pr: processes) {
 			// - Generating XMLGregorianCalendar - //
+			
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(pr.getStartTime().getTime());
-			XMLGregorianCalendar startTime = new XMLGregorianCalendarImpl(cal);
+			XMLGregorianCalendar startTime = null;
+			try {
+				startTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+			} catch (DatatypeConfigurationException e) {
+				System.err.println("Error! There is a problem with the instantiation of the DatatypeFactory");
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+				//startTime = new XMLGregorianCalendarImpl(cal);
+			}
 			
 			// - Taking the relative workflows name - //
 			String wfName = pr.getWorkflow().getName();
@@ -246,7 +256,15 @@ public class WFInfoSerializer {
 					// - Generating a new XMLGregorianCalendar - //
 					cal = new GregorianCalendar();
 					cal.setTime(asr.getTerminationTime().getTime());
-					XMLGregorianCalendar endTime = new XMLGregorianCalendarImpl(cal);
+					XMLGregorianCalendar endTime = null;
+					try {
+						endTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+					} catch (DatatypeConfigurationException e) {
+						System.err.println("Error! There is a problem with the instantiation of the DatatypeFactory");
+						System.err.println(e.getMessage());
+						e.printStackTrace();
+						//endTime = new XMLGregorianCalendarImpl(cal);
+					}
 					
 					action.setTimestamp(endTime);
 				}
