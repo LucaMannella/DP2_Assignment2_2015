@@ -6,23 +6,31 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.SchemaFactoryConfigurationError;
 
 import org.xml.sax.SAXException;
 
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+
+import it.polito.dp2.WF.ActionStatusReader;
 import it.polito.dp2.WF.FactoryConfigurationError;
 import it.polito.dp2.WF.ProcessReader;
 import it.polito.dp2.WF.WorkflowMonitor;
 import it.polito.dp2.WF.WorkflowMonitorException;
 import it.polito.dp2.WF.WorkflowMonitorFactory;
 import it.polito.dp2.WF.WorkflowReader;
+import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Actors;
 import it.polito.dp2.WF.sol2.jaxb.ObjectFactory;
 import it.polito.dp2.WF.sol2.jaxb.Process;
@@ -202,47 +210,55 @@ public class WFInfoSerializer {
 	 */
 	private Set<Process> createProcesses(Set<ProcessReader> processes) {
 		int code = 1;
-		/*
+		Set<Process> newProcesses = new HashSet<Process>();
+	
 		for (ProcessReader pr: processes) {
-			String startTime = dateFormat.format(pr.getStartTime().getTimeInMillis());
+			// - Generating XMLGregorianCalendar - //
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(pr.getStartTime().getTime());
+			XMLGregorianCalendar startTime = new XMLGregorianCalendarImpl(cal);
+			
+			// - Taking the relative workflows name - //
 			String wfName = pr.getWorkflow().getName();
+			
 			// creating a process
-			Element process = doc.createElement( WFElements.PROCESS );
+			Process process = objFactory.createProcess();
 			// setting its attributes
-			process.setAttribute( WFAttributes.PROCESS_CODE, "p"+code );
-			process.setAttribute( WFAttributes.PROCESS_WFNAME, wfName );
-			process.setAttribute( WFAttributes.PROCESS_TIME, startTime);
+			process.setCode("p"+code);
+			process.setStarted(startTime);
+			process.setWorkflow(wfName);
 			
-			// For each action print related data
-			List<ActionStatusReader> statusSet = pr.getStatus();
-			
-			for (ActionStatusReader asr : statusSet) {
-				Element action = doc.createElement( WFElements.ACTION_STATUS );
-								
-				action.setAttribute( WFAttributes.ACTION_STATUS_NAME, wfName+"_"+asr.getActionName() );
+			Set<Process.ActionStatus> newActions = new HashSet<Process.ActionStatus>();
+			// - For each process taking the inner actions - //
+			for ( ActionStatusReader asr : pr.getStatus() ) {
+				Process.ActionStatus action = objFactory.createProcessActionStatus();
+				
+				action.setAction( wfName+"_"+asr.getActionName() );
+				action.setIsTakenInCharge(asr.isTakenInCharge());
+				action.setIsTerminated(asr.isTerminated());
 				
 				if (asr.isTakenInCharge()) {		//was the action assigned?
 					String actor = asr.getActor().getName().replaceAll(" ", "_");
-					action.setAttribute( WFAttributes.ACTION_STATUS_ACTOR, actor );
-					if (asr.isTerminated())	{		//was the action completed?
-						String endTime = dateFormat.format( asr.getTerminationTime().getTimeInMillis() );
-						action.setAttribute( WFAttributes.ACTION_STATUS_TIME, endTime );
-					}
-					else {
-						action.setAttribute( WFAttributes.ACTION_STATUS_TIME, "Not Finished" );
-					}
+					action.setActor(actor);
 				}
-				else
-					action.setAttribute( WFAttributes.ACTION_STATUS_TIME, "Not Taken" );
-				
-				process.appendChild(action);	//appending the action to the process
+
+				if (asr.isTerminated())	{		//was the action completed?
+					// - Generating a new XMLGregorianCalendar - //
+					cal = new GregorianCalendar();
+					cal.setTime(asr.getTerminationTime().getTime());
+					XMLGregorianCalendar endTime = new XMLGregorianCalendarImpl(cal);
+					
+					action.setTimestamp(endTime);
+				}
+				newActions.add(action);
 			}
 			
-			root.appendChild(process);			//appending the process to the root
+			process.getActionStatus().addAll(newActions);
+			newProcesses.add(process);
 			code++;
 		}
-		*/
-		return null;
+	
+		return newProcesses;
 	}
 
 	private Set<Actors> createActors(WorkflowMonitor workflowMonitor2) {
