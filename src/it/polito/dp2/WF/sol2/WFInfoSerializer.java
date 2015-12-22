@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
@@ -16,20 +15,14 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.SchemaFactoryConfigurationError;
 
-import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import it.polito.dp2.WF.ActionReader;
-import it.polito.dp2.WF.ActionStatusReader;
 import it.polito.dp2.WF.FactoryConfigurationError;
-import it.polito.dp2.WF.ProcessActionReader;
 import it.polito.dp2.WF.ProcessReader;
-import it.polito.dp2.WF.SimpleActionReader;
 import it.polito.dp2.WF.WorkflowMonitor;
 import it.polito.dp2.WF.WorkflowMonitorException;
 import it.polito.dp2.WF.WorkflowMonitorFactory;
 import it.polito.dp2.WF.WorkflowReader;
-import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Actors;
 import it.polito.dp2.WF.sol2.jaxb.ObjectFactory;
 import it.polito.dp2.WF.sol2.jaxb.Process;
@@ -48,6 +41,10 @@ public class WFInfoSerializer {
 	
 	private SimpleDateFormat dateFormat;
 
+	/**
+	 * This method create an object {@link WFInfoSerializer} and it transforms its content into an XML file.
+	 * @param args [0] - The name fo the output file
+	 */
 	public static void main(String[] args) {
 		// This class should receive the name of the output file.
 		if(args.length != 1) {
@@ -64,8 +61,10 @@ public class WFInfoSerializer {
 			WorkflowManager root = serializer.createWorkflowManager();
 			
 			serializer.marshallDocument(root, System.out);
+			
 			PrintStream fpout = new PrintStream(new File(args[0]));
 			serializer.marshallDocument(root, fpout);
+			fpout.close();
 
 		}
 		catch (FactoryConfigurationError e) {
@@ -95,12 +94,13 @@ public class WFInfoSerializer {
 	
 	
 	/**
-	 * This method create an instance of the WFInfoSerializer
+	 * This method create an instance of the WFInfoSerializer.<br>
+	 * The serializer contains an XML {@link Schema} definition, a {@link JAXBContext} and a {@link WorkflowMonitor}.
 	 * 
 	 * @throws SAXException
-	 * @throws JAXBException
-	 * @throws FactoryConfigurationError
-	 * @throws WorkflowMonitorException
+	 * @throws JAXBException - If an error occurs during the creation of the {@link JAXBContext}
+	 * @throws FactoryConfigurationError - If an error occurs during the creation of the XML {@link Schema} or the {@link WorkflowMonitor}
+	 * @throws WorkflowMonitorException - If an error occurs during the creation of the {@link WorkflowMonitor}
 	 */
 	public WFInfoSerializer() throws  SAXException, JAXBException, FactoryConfigurationError, WorkflowMonitorException{
 		// creating the XML schema to validate the XML file
@@ -132,26 +132,37 @@ public class WFInfoSerializer {
 	}
 
 	/**
-	 * This method create an instance of WorkflowManager taking the data from the classes of the library.
+	 * This method create an instance of {@link WorkflowManager} taking the data from the {@link WorkflowMonitor}.
 	 * 
 	 * @return
 	 */
 	private WorkflowManager createWorkflowManager() {
 		WorkflowManager root = objFactory.createWorkflowManager();
 		
-		List<Workflow> workflows = root.getWorkflow();
-		//workflows.addAll( createWorkflows(workflowMonitor.getWorkflows()) );
+		System.out.println(workflowMonitor.getWorkflows());
+		Set<Workflow> createdWorkflows = createWorkflows(workflowMonitor.getWorkflows());
+		if(( createdWorkflows != null )&&( !createdWorkflows.isEmpty() ))
+			 root.getWorkflow().addAll(createdWorkflows);
+		else
+			System.out.println("DEBUG - The return value of createWorkflows() is null or empty!");
 		
-		List<Process> processes = root.getProcess();
-		processes.add( createProcesses(workflowMonitor.getProcesses()) );
+		System.out.println(workflowMonitor.getProcesses());
+		Set<Process> createdProcesses = createProcesses(workflowMonitor.getProcesses());
+		if(( createdProcesses != null )&&( !createdProcesses.isEmpty() ))
+			root.getProcess().addAll(createdProcesses);
+		else
+			System.out.println("DEBUG - The return value of createProcesses() is null or empty!");
 		
-		List<Actors> actors = root.getActors();
-		//aggiungiamo gli attori
+		Set<Actors> createdActors = createActors(workflowMonitor);
+		if(( createdActors != null )&&( !createdActors.isEmpty() ))
+			root.getActors().addAll(createdActors);
+		else
+			System.out.println("DEBUG - The return value of createActors() is null or empty!");
 		
 		return root;
 	}
 
-	private static Set<Workflow> createWorkflows(Set<WorkflowReader> set) {
+	private Set<Workflow> createWorkflows(Set<WorkflowReader> set) {
 		/*for( WorkflowReader wf : set ) {
 			String wfName = wf.getName();
 			
@@ -184,7 +195,12 @@ public class WFInfoSerializer {
 		return null;
 	}
 
-	private static Process createProcesses(Set<ProcessReader> processes) {
+	/**
+	 * This method converts a set of {@link ProcessReader} into a set of {@link Process}.
+	 * @param processes - The set of {@link ProcessReader} 
+	 * @return The set of {@link Process}
+	 */
+	private Set<Process> createProcesses(Set<ProcessReader> processes) {
 		int code = 1;
 		/*
 		for (ProcessReader pr: processes) {
@@ -229,7 +245,19 @@ public class WFInfoSerializer {
 		return null;
 	}
 
+	private Set<Actors> createActors(WorkflowMonitor workflowMonitor2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+
+	/**
+	 * This method converts a {@link WorkflowManager} object into an XML file.
+	 * @param root - A {@link WorkflowManager} object
+	 * @param outputFile - A stream related to the file that you want to write.
+	 * 
+	 * @throws JAXBException - If it is not possible to create the XML file.
+	 */
 	private void marshallDocument(WorkflowManager root, PrintStream outputFile) throws JAXBException {
 		/* - Creating the XML document - */			
 		Marshaller m = jc.createMarshaller();
