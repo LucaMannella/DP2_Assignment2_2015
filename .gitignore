@@ -1,7 +1,6 @@
 # Generated Files
 *.class
 build/
-generated/
 zip/
 xsd/output*.xml
 
