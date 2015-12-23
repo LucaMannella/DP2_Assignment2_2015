@@ -22,13 +22,18 @@ import javax.xml.validation.SchemaFactoryConfigurationError;
 
 import org.xml.sax.SAXException;
 
+import it.polito.dp2.WF.ActionReader;
 import it.polito.dp2.WF.ActionStatusReader;
+import it.polito.dp2.WF.Actor;
 import it.polito.dp2.WF.FactoryConfigurationError;
+import it.polito.dp2.WF.ProcessActionReader;
 import it.polito.dp2.WF.ProcessReader;
+import it.polito.dp2.WF.SimpleActionReader;
 import it.polito.dp2.WF.WorkflowMonitor;
 import it.polito.dp2.WF.WorkflowMonitorException;
 import it.polito.dp2.WF.WorkflowMonitorFactory;
 import it.polito.dp2.WF.WorkflowReader;
+import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Actors;
 import it.polito.dp2.WF.sol2.jaxb.ObjectFactory;
 import it.polito.dp2.WF.sol2.jaxb.Process;
@@ -61,17 +66,24 @@ public class WFInfoSerializer {
 		System.out.println("This program will serialize your WorkflowMonitor into an XML file!");
 		
 		try {
-			
 			WFInfoSerializer serializer = new WFInfoSerializer();
+			System.out.flush();
+			System.out.println("\nDEBUG [WFInfoSerializer - Main()]: WFInfoSerializer created!\n");
+			System.out.flush();
 			
 			WorkflowManager root = serializer.createWorkflowManager();
+			System.out.flush();
+			System.out.println("\nDEBUG [WFInfoSerializer - Main()]: WorkflowManager created!\n");
+			System.out.flush();
 			
 			serializer.marshallDocument(root, System.out);
+			System.out.flush();
+			System.out.println("\nDEBUG [WFInfoSerializer - Main()]: The document was marshalled on the stdout!\n");
+			System.out.flush();
 			
 			PrintStream fpout = new PrintStream(new File(args[0]));
 			serializer.marshallDocument(root, fpout);
 			fpout.close();
-
 		}
 		catch (FactoryConfigurationError e) {
 			System.err.println("Could not create a DocumentBuilderFactory: "+e.getMessage());
@@ -150,57 +162,98 @@ public class WFInfoSerializer {
 		if(( createdWorkflows != null )&&( !createdWorkflows.isEmpty() ))
 			 root.getWorkflow().addAll(createdWorkflows);
 		else
-			System.out.println("DEBUG - The return value of createWorkflows() is null or empty!");
+			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createWorkflows() is null or empty!\n");
 		
 		System.out.println(workflowMonitor.getProcesses());
 		Set<Process> createdProcesses = createProcesses(workflowMonitor.getProcesses());
 		if(( createdProcesses != null )&&( !createdProcesses.isEmpty() ))
 			root.getProcess().addAll(createdProcesses);
 		else
-			System.out.println("DEBUG - The return value of createProcesses() is null or empty!");
+			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createProcesses() is null or empty!\n");
 		
-		Set<Actors> createdActors = createActors(workflowMonitor);
+		Set<Actors> createdActors = createActors();
 		if(( createdActors != null )&&( !createdActors.isEmpty() ))
 			root.getActors().addAll(createdActors);
 		else
-			System.out.println("DEBUG - The return value of createActors() is null or empty!");
+			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createActors() is null or empty!\n");
 		
 		return root;
 	}
 
-	private Set<Workflow> createWorkflows(Set<WorkflowReader> workflows) {
+	/**
+	 * This method converts a set of {@link WorkflowReader} into a set of {@link Workflow}.
+	 * @param processes - The set of {@link WorkflowReader} 
+	 * @return The set of {@link Workflow}
+	 */
+	private Set<Workflow> createWorkflows(Set<WorkflowReader> workflows) { 
 		Set<Workflow> newWorkflows = new HashSet<Workflow>();
-	/*	
+		// /*
 		for( WorkflowReader wf : workflows ) {
 			String wfName = wf.getName();
 			
+			// - Creating the workflow object and set its attribute - //
 			Workflow workflow = objFactory.createWorkflow();
 			workflow.setName(wfName);
 			
+			Set<ActionType> newActions = new HashSet<ActionType>();
+			// - For each Workflow taking the inner actions - //
 			for( ActionReader ar : wf.getActions()) {
 				String actName = ar.getName();
 				String id = wfName+"_"+actName;
 				
+				// - Creating the action object - //
 				ActionType action = objFactory.createActionType();
+				
 				action.setId(id);
 				action.setName(actName);
 				action.setRole(ar.getRole());
 				action.setAutomInst(ar.isAutomaticallyInstantiated());
 				
 				if(ar instanceof SimpleActionReader) {
+					// - Casting the action to the right type - //
 					SimpleActionReader sar = (SimpleActionReader) ar;
-					sar.getPossibleNextActions();
+					
+					// - Creating the SimpleAction - //
+					ActionType.SimpleAction simpleAction = objFactory.createActionTypeSimpleAction();
+					//TODO: error here!!! Le azioni devono essere convertite prima di poter essere aggiunte
+					Set<ActionReader> nextActions = sar.getPossibleNextActions();
+					//for
+					if(( nextActions != null )&&( !nextActions.isEmpty() ))
+						simpleAction.getNextActions().addAll(nextActions);
+					else
+						System.out.println("\nDEBUG [WFInfoSerializer - createWorkflows()]: The action "+id+" does not have next actions!\n");
+					
+					// - Setting simpleAction & processAction inside the element - //
+					action.setSimpleAction(simpleAction);
+					action.setProcessAction(null);
 				}
 				else if (ar instanceof ProcessActionReader) {
+					// - Casting the action to the right type - //
 					ProcessActionReader par = (ProcessActionReader) ar;
-					WorkflowReader nextWorkflowReader = par.getActionWorkflow();
-					Workflow nextWorkflow = objFactory.createWorkflow();
+					
+					// - Creating the ProcessAction - //
+					ActionType.ProcessAction processAction = objFactory.createActionTypeProcessAction();
+					processAction.setNextProcess(par.getActionWorkflow().getName());
+					
+					// - Setting simpleAction & processAction inside the element - //
+					action.setSimpleAction(null);
+					action.setProcessAction(processAction);
 				}
 				else
 					System.err.println("Error! The ActionReader belongs to a not known type! \n");
+				
+				// - Adding the new action to the set - //
+				newActions.add(action);
 			}
+			
+			if( !newActions.isEmpty() )
+				workflow.getAction().addAll(newActions);
+			else
+				System.out.println("\nDEBUG [WFInfoSerializer - createWorkflows()]: The workflow"+wfName+" does not have actions!\n");
+			
+			newWorkflows.add(workflow);
 		}
-		*/
+		// */
 		return newWorkflows;
 	}
 
@@ -215,7 +268,6 @@ public class WFInfoSerializer {
 	
 		for (ProcessReader pr: processes) {
 			// - Generating XMLGregorianCalendar - //
-			
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(pr.getStartTime().getTime());
 			XMLGregorianCalendar startTime = null;
@@ -271,7 +323,11 @@ public class WFInfoSerializer {
 				newActions.add(action);
 			}
 			
-			process.getActionStatus().addAll(newActions);
+			if( !newActions.isEmpty() )
+				process.getActionStatus().addAll(newActions);
+			else
+				System.out.println("\nDEBUG [WFInfoSerializer - createProcesses()]: The process p"+code+" does not have actions!\n");
+			
 			newProcesses.add(process);
 			code++;
 		}
@@ -279,9 +335,40 @@ public class WFInfoSerializer {
 		return newProcesses;
 	}
 
-	private Set<Actors> createActors(WorkflowMonitor workflowMonitor2) {
-		// TODO Auto-generated method stub
-		return null;
+	private Set<Actors> createActors() {
+		// creating the actors container
+		Set<Actor> actorsSet = new HashSet<Actor>();
+		
+		for( ProcessReader pr: workflowMonitor.getProcesses() ) // for each process
+		{
+			for( ActionStatusReader asr : pr.getStatus() )		// I take all the actions
+			{									 
+				if(asr.isTakenInCharge())	// and I take the actor only if the action was taken in charge
+					actorsSet.add( asr.getActor() );
+			}
+		}
+		
+		Set<Actors> newDepartments = new HashSet<Actors>();
+		// add here an outer loop
+		Actors department = objFactory.createActors();
+		//TODO: change this part if you want to manage the departments
+		
+		Set<Actors.Actor> actorInDepartment = new HashSet<Actors.Actor>();
+		for (Actor a : actorsSet) {
+			Actors.Actor xmlActor = objFactory.createActorsActor();
+			xmlActor.setName(a.getName().replaceAll(" ", "_"));
+			xmlActor.setRole(a.getRole());
+			
+			actorInDepartment.add(xmlActor);
+		}
+		if( !actorInDepartment.isEmpty() )
+			department.getActor().addAll(actorInDepartment);
+		else
+			System.out.println("\nDEBUG [WFInfoSerializer - createActors()]: The Actors tag has no actor elements!\n");
+		
+		newDepartments.add(department);
+		// end of the outer loop
+		return newDepartments;
 	}
 
 
