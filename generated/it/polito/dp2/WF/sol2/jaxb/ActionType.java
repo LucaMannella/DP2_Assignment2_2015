@@ -28,36 +28,36 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
  * 
  * <pre>
- * &lt;complexType name="action_type">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;choice>
- *         &lt;element name="simple_action">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;attribute name="nextActions" type="{http://www.w3.org/2001/XMLSchema}IDREFS" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="process_action">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;attribute name="nextProcess" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/choice>
- *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}ID" />
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *       &lt;attribute name="role" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *       &lt;attribute name="automInst" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * <complexType name="action_type">
+ *   <complexContent>
+ *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       <choice>
+ *         <element name="simple_action">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <attribute name="nextActions" type="{http://www.w3.org/2001/XMLSchema}IDREFS" />
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="process_action">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <attribute name="nextProcess" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *       </choice>
+ *       <attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}ID" />
+ *       <attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *       <attribute name="role" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *       <attribute name="automInst" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
+ *     </restriction>
+ *   </complexContent>
+ * </complexType>
  * </pre>
  * 
  * 
@@ -244,13 +244,13 @@ public class ActionType {
      * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
      * 
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;attribute name="nextProcess" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <attribute name="nextProcess" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      * 
      * 
@@ -297,13 +297,13 @@ public class ActionType {
      * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
      * 
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;attribute name="nextActions" type="{http://www.w3.org/2001/XMLSchema}IDREFS" />
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <attribute name="nextActions" type="{http://www.w3.org/2001/XMLSchema}IDREFS" />
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      * 
      * 

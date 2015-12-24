@@ -28,30 +28,30 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="action_status" maxOccurs="unbounded">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *                 &lt;attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
- *                 &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
- *                 &lt;attribute name="isTerminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *                 &lt;attribute name="isTakenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *       &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}token" />
- *       &lt;attribute name="started" use="required" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
- *       &lt;attribute name="workflow" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * <complexType>
+ *   <complexContent>
+ *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       <sequence>
+ *         <element name="action_status" maxOccurs="unbounded">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *                 <attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *                 <attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+ *                 <attribute name="isTerminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+ *                 <attribute name="isTakenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *       </sequence>
+ *       <attribute name="code" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *       <attribute name="started" use="required" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+ *       <attribute name="workflow" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *     </restriction>
+ *   </complexContent>
+ * </complexType>
  * </pre>
  * 
  * 
@@ -185,17 +185,17 @@ public class Process {
      * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
      * 
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       &lt;attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
-     *       &lt;attribute name="isTerminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
-     *       &lt;attribute name="isTakenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *       <attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *       <attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+     *       <attribute name="isTerminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+     *       <attribute name="isTakenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      * 
      * 

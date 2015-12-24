@@ -22,17 +22,17 @@ import javax.xml.bind.annotation.XmlType;
  * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element ref="{http://lucamannella.altervista.org/WFInfo}workflow" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element ref="{http://lucamannella.altervista.org/WFInfo}process" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element ref="{http://lucamannella.altervista.org/WFInfo}actors" maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * <complexType>
+ *   <complexContent>
+ *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       <sequence>
+ *         <element ref="{http://lucamannella.altervista.org/WFInfo}workflow" maxOccurs="unbounded" minOccurs="0"/>
+ *         <element ref="{http://lucamannella.altervista.org/WFInfo}process" maxOccurs="unbounded" minOccurs="0"/>
+ *         <element ref="{http://lucamannella.altervista.org/WFInfo}actors" maxOccurs="unbounded" minOccurs="0"/>
+ *       </sequence>
+ *     </restriction>
+ *   </complexContent>
+ * </complexType>
  * </pre>
  * 
  * 

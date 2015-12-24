@@ -27,16 +27,16 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="action" type="{http://lucamannella.altervista.org/WFInfo}action_type" maxOccurs="unbounded"/>
- *       &lt;/sequence>
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * <complexType>
+ *   <complexContent>
+ *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       <sequence>
+ *         <element name="action" type="{http://lucamannella.altervista.org/WFInfo}action_type" maxOccurs="unbounded"/>
+ *       </sequence>
+ *       <attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *     </restriction>
+ *   </complexContent>
+ * </complexType>
  * </pre>
  * 
  * 
