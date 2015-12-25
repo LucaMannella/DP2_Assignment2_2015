@@ -34,6 +34,7 @@ public abstract class AbstractActionReader implements ActionReader {
 		return this.parent;
 	}
 	
+	// Extra method //
 	public String getId() {
 		return this.id;
 	}
