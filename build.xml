@@ -140,7 +140,7 @@
 		</antcall>
 	</target>
 	
-	<!-- Target renFuncTest -->
+	<!-- Target runFuncTest -->
 	<target name="runFuncTest" description="Run all the tests" depends="setseed">
 		<antcall target="runFuncTest.real">
 			<param name="test.class" value="${test.class}" />
