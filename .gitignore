@@ -19,3 +19,7 @@ hs_err_pid*
 .classpath
 .project
 .settings/
+
+#intelliJ IDEA files
+.idea/
+DP2_Assignment2.iml
