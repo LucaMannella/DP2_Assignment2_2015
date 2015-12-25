@@ -5,9 +5,10 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
@@ -18,7 +19,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.SchemaFactoryConfigurationError;
 
 import org.xml.sax.SAXException;
 
@@ -42,15 +42,13 @@ import it.polito.dp2.WF.sol2.jaxb.WorkflowManager;
 
 public class WFInfoSerializer {
 	
-	public static final String XSD_NAME = "xsd/Wfinfo.xsd";
+	public static final String XSD_NAME = "xsd/WFInfo.xsd";
 	public static final String PACKAGE = "it.polito.dp2.WF.sol2.jaxb";
 	
 	private Schema schema;
 	private JAXBContext jc;
 	private ObjectFactory objFactory;
 	private WorkflowMonitor workflowMonitor;
-	
-	private SimpleDateFormat dateFormat;
 
 	/**
 	 * This method create an object {@link WFInfoSerializer} and it transforms its content into an XML file.
@@ -67,19 +65,10 @@ public class WFInfoSerializer {
 		
 		try {
 			WFInfoSerializer serializer = new WFInfoSerializer();
-			System.out.flush();
-			System.out.println("\nDEBUG [WFInfoSerializer - Main()]: WFInfoSerializer created!\n");
-			System.out.flush();
-			
 			WorkflowManager root = serializer.createWorkflowManager();
-			System.out.flush();
-			System.out.println("\nDEBUG [WFInfoSerializer - Main()]: WorkflowManager created!\n");
-			System.out.flush();
+			System.out.println("The data structures were created!\n");
 			
 			serializer.marshallDocument(root, System.out);
-			System.out.flush();
-			System.out.println("\nDEBUG [WFInfoSerializer - Main()]: The document was marshalled on the stdout!\n");
-			System.out.flush();
 			
 			PrintStream fpout = new PrintStream(new File(args[0]));
 			serializer.marshallDocument(root, fpout);
@@ -129,10 +118,6 @@ public class WFInfoSerializer {
 			System.err.println("Error! No implementation of the schema language is available");
 			throw new FactoryConfigurationError("No implementation of the schema language is available");
 		}
-		catch(SchemaFactoryConfigurationError e) {
-			System.err.println("Error! A configuration error is encountered!");
-			throw new FactoryConfigurationError("A configuration error is encountered");
-		}
 		catch(NullPointerException e) {
 			System.err.println("Error! The instane of the schema or the file of the schema is not well created!\n");
 			throw new SAXException("The schema file is null!");
@@ -146,7 +131,7 @@ public class WFInfoSerializer {
 		objFactory = new ObjectFactory();
 		
 		// This element will help to managing the data format (e.g. 2015-10-20T16:12:15+01:00 )
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+		//dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 	}
 
 	/**
@@ -157,14 +142,14 @@ public class WFInfoSerializer {
 	private WorkflowManager createWorkflowManager() {
 		WorkflowManager root = objFactory.createWorkflowManager();
 		
-		System.out.println(workflowMonitor.getWorkflows());
+		System.out.println("Workflows: "+workflowMonitor.getWorkflows());
 		Set<Workflow> createdWorkflows = createWorkflows(workflowMonitor.getWorkflows());
 		if(( createdWorkflows != null )&&( !createdWorkflows.isEmpty() ))
 			 root.getWorkflow().addAll(createdWorkflows);
 		else
 			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createWorkflows() is null or empty!\n");
 		
-		System.out.println(workflowMonitor.getProcesses());
+		System.out.println("Processes: "+workflowMonitor.getProcesses());
 		Set<Process> createdProcesses = createProcesses(workflowMonitor.getProcesses());
 		if(( createdProcesses != null )&&( !createdProcesses.isEmpty() ))
 			root.getProcess().addAll(createdProcesses);
@@ -195,59 +180,21 @@ public class WFInfoSerializer {
 			Workflow workflow = objFactory.createWorkflow();
 			workflow.setName(wfName);
 			
-			Set<ActionType> newActions = new HashSet<ActionType>();
-			// - For each Workflow taking the inner actions - //
+			Map<String, ActionType> newActions = new HashMap<String, ActionType>();
+			// - building all the actions - //
 			for( ActionReader ar : wf.getActions()) {
-				String actName = ar.getName();
-				String id = wfName+"_"+actName;
-				
-				// - Creating the action object - //
-				ActionType action = objFactory.createActionType();
-				
-				action.setId(id);
-				action.setName(actName);
-				action.setRole(ar.getRole());
-				action.setAutomInst(ar.isAutomaticallyInstantiated());
-				
+				ActionType newAct = buildActionType(wfName, ar, newActions);
+				newActions.put(newAct.getName(), newAct);
+			}
+			// - linking all the actions - //
+			for( ActionReader ar : wf.getActions()) {
 				if(ar instanceof SimpleActionReader) {
-					// - Casting the action to the right type - //
-					SimpleActionReader sar = (SimpleActionReader) ar;
-					
-					// - Creating the SimpleAction - //
-					ActionType.SimpleAction simpleAction = objFactory.createActionTypeSimpleAction();
-					//TODO: error here!!! Le azioni devono essere convertite prima di poter essere aggiunte
-					Set<ActionReader> nextActions = sar.getPossibleNextActions();
-					//for
-					if(( nextActions != null )&&( !nextActions.isEmpty() ))
-						simpleAction.getNextActions().addAll(nextActions);
-					else
-						System.out.println("\nDEBUG [WFInfoSerializer - createWorkflows()]: The action "+id+" does not have next actions!\n");
-					
-					// - Setting simpleAction & processAction inside the element - //
-					action.setSimpleAction(simpleAction);
-					action.setProcessAction(null);
+					linkSimpleAction( (SimpleActionReader)ar, newActions );
 				}
-				else if (ar instanceof ProcessActionReader) {
-					// - Casting the action to the right type - //
-					ProcessActionReader par = (ProcessActionReader) ar;
-					
-					// - Creating the ProcessAction - //
-					ActionType.ProcessAction processAction = objFactory.createActionTypeProcessAction();
-					processAction.setNextProcess(par.getActionWorkflow().getName());
-					
-					// - Setting simpleAction & processAction inside the element - //
-					action.setSimpleAction(null);
-					action.setProcessAction(processAction);
-				}
-				else
-					System.err.println("Error! The ActionReader belongs to a not known type! \n");
-				
-				// - Adding the new action to the set - //
-				newActions.add(action);
 			}
 			
 			if( !newActions.isEmpty() )
-				workflow.getAction().addAll(newActions);
+				workflow.getAction().addAll(newActions.values());
 			else
 				System.out.println("\nDEBUG [WFInfoSerializer - createWorkflows()]: The workflow"+wfName+" does not have actions!\n");
 			
@@ -256,6 +203,67 @@ public class WFInfoSerializer {
 		// */
 		return newWorkflows;
 	}
+
+
+	private ActionType buildActionType(String wfName, ActionReader ar, Map<String, ActionType> createdActions) {
+		String actName = ar.getName();
+		String id = wfName+"_"+actName;
+		
+		// - Creating the action object - //
+		ActionType action = objFactory.createActionType();
+		
+		action.setId(id);
+		action.setName(actName);
+		action.setRole(ar.getRole());
+		action.setAutomInst(ar.isAutomaticallyInstantiated());
+		
+		if (ar instanceof ProcessActionReader) {
+			// - Casting the action to the right type - //
+			ProcessActionReader par = (ProcessActionReader) ar;
+			
+			// - Creating the ProcessAction - //
+			ActionType.ProcessAction processAction = objFactory.createActionTypeProcessAction();
+			processAction.setNextProcess(par.getActionWorkflow().getName());
+			
+			// - Setting simpleAction & processAction inside the element - //
+			action.setSimpleAction(null);
+			action.setProcessAction(processAction);
+		}
+		else if (ar instanceof SimpleActionReader == false)
+			System.err.println("Error! The ActionReader "+ar.getName()+" belongs to a not known type! \n");
+	
+		return action;
+	}
+
+
+	private void linkSimpleAction(SimpleActionReader actReader, Map<String, ActionType> createdActions) {
+		//TODO: testare
+		ActionType actType = createdActions.get(actReader.getName());
+		
+		// - Creating the SimpleAction - //
+		ActionType.SimpleAction simpleAction = objFactory.createActionTypeSimpleAction();
+		
+		// - Save all the nextActions inside the list - //
+		for(ActionReader possibleAction : actReader.getPossibleNextActions()) {
+			ActionType azioneSuccessiva = createdActions.get(possibleAction.getName());
+			if(azioneSuccessiva != null)
+				simpleAction.getNextActions().add(azioneSuccessiva);
+			else
+				System.err.println("Error! Situazione inaspettata! Non esiste l'azione: "+possibleAction.getName());
+				
+		}
+
+//		probabilmente l'errore era dovuto al fatto che generare la lista senza riempirla creava problema
+//		if(simpleAction.getNextActions().isEmpty())
+//			System.out.println("\nDEBUG [WFInfoSerializer - createWorkflows()]: The action "+actReader.getName()+" does not have next actions!\n");
+		
+		// - Setting simpleAction & processAction inside the element - //
+		actType.setSimpleAction(simpleAction);
+		actType.setProcessAction(null);
+		
+		createdActions.put(actReader.getName(), actType);
+	}
+
 
 	/**
 	 * This method converts a set of {@link ProcessReader} into a set of {@link Process}.
@@ -373,7 +381,7 @@ public class WFInfoSerializer {
 
 
 	/**
-	 * This method converts a {@link WorkflowManager} object into an XML file.
+	 * This method converts a {@link WorkflowManager} object into a valid XML file.
 	 * @param root - A {@link WorkflowManager} object
 	 * @param outputFile - A stream related to the file that you want to write.
 	 * 
@@ -383,6 +391,7 @@ public class WFInfoSerializer {
 		/* - Creating the XML document - */			
 		Marshaller m = jc.createMarshaller();
 		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m.setSchema(schema);
 		m.marshal(root, outputFile);
 	}
 
