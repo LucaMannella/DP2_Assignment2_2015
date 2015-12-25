@@ -3,6 +3,7 @@
 build/
 zip/
 xsd/output*.xml
+temp*/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
