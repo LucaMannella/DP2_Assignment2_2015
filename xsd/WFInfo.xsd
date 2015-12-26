@@ -100,8 +100,8 @@
 						<attribute name="action" type="token" use="required" />
 						<attribute name="actor" type="token" use="optional" />
 						<attribute name="timestamp" type="dateTime" use="optional" />
-						<attribute name="isTerminated" type="boolean" use="required" />
-						<attribute name="isTakenInCharge" type="boolean" use="required" />
+						<attribute name="terminated" type="boolean" use="required" />
+						<attribute name="takenInCharge" type="boolean" use="required" />
 					</complexType>
 				</element>
 			</sequence>

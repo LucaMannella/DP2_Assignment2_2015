@@ -304,8 +304,8 @@ public class WFInfoSerializer {
 				Process.ActionStatus action = objFactory.createProcessActionStatus();
 				
 				action.setAction( wfName+"_"+asr.getActionName() );
-				action.setIsTakenInCharge(asr.isTakenInCharge());
-				action.setIsTerminated(asr.isTerminated());
+				action.setTakenInCharge(asr.isTakenInCharge());
+				action.setTerminated(asr.isTerminated());
 				
 				if (asr.isTakenInCharge()) {		//was the action assigned?
 					String actor = asr.getActor().getName().replaceAll(" ", "_");
