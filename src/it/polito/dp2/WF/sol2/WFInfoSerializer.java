@@ -221,7 +221,7 @@ public class WFInfoSerializer {
 			// - Casting the action to the right type - //
 			ProcessActionReader par = (ProcessActionReader) ar;
 			
-			// - Creating the ProcessAction - //
+			// - Creating the ProcessActionReader - //
 			ActionType.ProcessAction processAction = objFactory.createActionTypeProcessAction();
 			processAction.setNextProcess(par.getActionWorkflow().getName());
 			
@@ -240,7 +240,7 @@ public class WFInfoSerializer {
 		//TODO: testare
 		ActionType actType = createdActions.get(actReader.getName());
 		
-		// - Creating the SimpleAction - //
+		// - Creating the SimpleActionReader - //
 		ActionType.SimpleAction simpleAction = objFactory.createActionTypeSimpleAction();
 		
 		// - Save all the nextActions inside the list - //
