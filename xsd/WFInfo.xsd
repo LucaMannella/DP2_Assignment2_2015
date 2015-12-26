@@ -34,7 +34,7 @@
     	    <selector xpath="process/action_status" />
     	    <field xpath="@action" />
     	</keyref>
-    	<!-- insert a comment -->
+    	<!-- The attribute actor inside action_status points to the relative actor element -->
     	<keyref name="actor_key_ref" refer="wf:actor_key">
     		<selector xpath="process/action_status" />
     		<field xpath="@actor" />
