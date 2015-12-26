@@ -93,6 +93,10 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		}
 		System.out.println("DEBUG - "+processes.size()+" processes were created.");
 		
+		for( WorkflowReader wf : workflows.values() ) {
+			if(wf instanceof ConcreteWorkflowReader)
+				((ConcreteWorkflowReader)wf).setProcesses(processes.values());
+		}
 	}
 	
 	@Override

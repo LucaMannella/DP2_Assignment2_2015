@@ -3,6 +3,7 @@ package it.polito.dp2.WF.sol2;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 import it.polito.dp2.WF.ActionStatusReader;
@@ -24,7 +25,8 @@ public class ConcreteActionStatusReader implements ActionStatusReader {
 		
 		this.takenInCharge = action.isTakenInCharge();
 		this.terminated = action.isTerminated();
-		this.terminationTime.setTimeInMillis(0);		//default value
+		this.terminationTime = new GregorianCalendar();
+			terminationTime.setTimeInMillis(0);			//default value
 		
 		//TODO: attenzione! è possibile che non vada una cazzo nelle actionReader perchè vengono ritornate stringhe e non oggetti... Controllare!!!
 		if(takenInCharge) {

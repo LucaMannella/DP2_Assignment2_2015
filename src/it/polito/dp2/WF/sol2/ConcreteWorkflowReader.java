@@ -1,5 +1,6 @@
 package it.polito.dp2.WF.sol2;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -66,19 +67,16 @@ public class ConcreteWorkflowReader implements WorkflowReader, Comparable<Workfl
 			//The nextWorkflow for processAction will be set by th WorkflowMonitor
 		}
 		
-//TODO:	if(procNodes == null) return;		//safety lock 
-		// set the processes that refer this Workflow
-		for( Process p : root.getProcess()) {
-			
-			if( p.getWorkflow().equals(this.name) ) {
-				//if(process.workflowName == workflow.name) 
-				ProcessReader pReader = new ConcreteProcessReader(p, this);
-				processes.add(pReader);
-			}	
-		}
-		
 	}
 
+	public void setProcesses(Collection<ProcessReader> processesSet) { 
+		// set the processes that refer this Workflow
+		for( ProcessReader p : processesSet) {
+			//if(process.workflowName == workflow.name)
+			if(p.getWorkflow().getName().equals(this.name))
+				processes.add(p);
+		}	
+	}
 	
 	public void setWfsInsideProcessActions(HashMap<String, WorkflowReader> workflows) {
 		for( ActionReader actReader : actions.values() ) {
