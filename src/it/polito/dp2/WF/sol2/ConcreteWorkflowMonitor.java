@@ -46,7 +46,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 			System.err.println("Error during the unmarshalling of the XML document...");
 			throw e;
 		}
-		
+
 		// - Workflows - //
 		System.out.println("DEBUG - In the document there are "+root.getWorkflow().size()+" workflows");
 		

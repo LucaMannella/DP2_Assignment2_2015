@@ -30,7 +30,7 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 			ActionStatusReader asr = new ConcreteActionStatusReader( action, myWorkflow.getName() );
 			statusActions.add(asr);
 		}
-		
+
 	}
 
 	@Override
