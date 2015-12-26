@@ -13,9 +13,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import it.polito.dp2.WF.Actor;
 import it.polito.dp2.WF.FactoryConfigurationError;
@@ -36,7 +34,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 	private HashMap<String, WorkflowReader> workflows;
 	private HashMap<String, Actor> actors;
 	
-	public ConcreteWorkflowMonitor() throws SAXException, JAXBException {	// TODO Auto-generated constructor stub
+	public ConcreteWorkflowMonitor() throws SAXException, JAXBException {
 		
 		JAXBContext jc = JAXBContext.newInstance(PACKAGE);
 		String fileName = System.getProperty("it.polito.dp2.WF.sol2.WorkflowInfo.file");
@@ -51,15 +49,25 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		
 		// - Workflows - //
 		System.out.println("DEBUG - In the document there are "+root.getWorkflow().size()+" workflows");
+		
+		workflows = new HashMap<String, WorkflowReader>();
 		for( Workflow wf : root.getWorkflow() ) {
-			WorkflowReader wfReader = new ConcreteWorkflowReader(wf, root.getProcess());
+			WorkflowReader wfReader = new ConcreteWorkflowReader(wf, root);
 			workflows.put(wfReader.getName(), wfReader);
+		}
+		// This loop is to managing the ProcessActions
+		for( WorkflowReader wf : workflows.values() ) {
+			if(wf instanceof ConcreteWorkflowReader)
+				((ConcreteWorkflowReader)wf).setWfsInsideProcessActions(workflows);
 		}
 		System.out.println("DEBUG - "+workflows.size()+" workflows were created.");
 		
 		// - Processes - //
 		System.out.println("DEBUG - In the document there are "+root.getProcess().size()+" processes");
+		
+		
 		int code = 1;
+		processes = new HashMap<String, ProcessReader>();
 		for( Process p : root.getProcess() ) {
 			WorkflowReader myWF = workflows.get(p.getWorkflow());
 			//I should have already the workflow inside the hashmap (document should be valid)
@@ -73,6 +81,8 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		
 		// - Actors - //	TODO: update this part if you want to manage more departments	
 		System.out.println("DEBUG - In the document there are "+root.getActors().size()+" departments");
+		actors = new HashMap<String, Actor> ();
+		
 		// this loop is executed just one time in this particular application
 		for( Actors dep : root.getActors() ) {
 			System.out.println("DEBUG - In the department there are "+dep.getActor().size()+" actors");
@@ -84,7 +94,6 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 			System.out.println("DEBUG - "+actors.size()+" actors were created.");
 		}
 		
-		return;
 	}
 	
 	@Override
@@ -105,7 +114,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 	public String toString(){
 		StringBuffer buf = new StringBuffer("Inside this WorkflowMonitor there are:\n");
 		
-		if(workflows==null)
+		if((workflows==null) || (workflows.isEmpty()))
 			buf.append("\tNo Workflows\n");
 		else {
 			buf.append("Workflows:\n");
@@ -113,7 +122,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 				buf.append("\t\t"+wfr.toString()+"\n");
 		}
 		
-		if(processes==null)
+		if((processes==null) || (processes.isEmpty()))
 			buf.append("\tNo Processes\n");
 		else {
 			buf.append("Processes:\n");
@@ -121,7 +130,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 				buf.append("\t"+pr.toString()+"\n");
 		}
 				
-		if(actors==null)
+		if((actors==null) || (actors.isEmpty()))
 			buf.append("\tNo Actors\n");
 		else {
 			buf.append("Actors:\n");
