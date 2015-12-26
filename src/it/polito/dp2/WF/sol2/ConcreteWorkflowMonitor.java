@@ -62,22 +62,6 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		}
 		System.out.println("DEBUG - "+workflows.size()+" workflows were created.");
 		
-		// - Processes - //
-		System.out.println("DEBUG - In the document there are "+root.getProcess().size()+" processes");
-		
-		int code = 1;
-		processes = new HashMap<String, ProcessReader>();
-		for( Process p : root.getProcess() ) {
-			WorkflowReader myWF = workflows.get(p.getWorkflow());
-			//I should have already the workflow inside the hashmap (document should be valid)
-			
-			ProcessReader procReader = new ConcreteProcessReader(p, myWF);		    	
-	    	processes.put("p"+code, procReader);
-	    	
-	    	code++;
-		}
-		System.out.println("DEBUG - "+processes.size()+" processes were created.");
-		
 		// - Actors - //	TODO: update this part if you want to manage more departments	
 		System.out.println("DEBUG - In the document there are "+root.getActors().size()+" departments");
 		actors = new HashMap<String, Actor> ();
@@ -92,6 +76,22 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 			}
 			System.out.println("DEBUG - "+actors.size()+" actors were created.");
 		}
+		
+		// - Processes - //
+		System.out.println("DEBUG - In the document there are "+root.getProcess().size()+" processes");
+		
+		int code = 1;
+		processes = new HashMap<String, ProcessReader>();
+		for( Process p : root.getProcess() ) {
+			WorkflowReader myWF = workflows.get(p.getWorkflow());
+			//I should have already the workflow inside the hashmap (document should be valid)
+			
+			ProcessReader procReader = new ConcreteProcessReader(p, myWF, actors);		    	
+	    	processes.put("p"+code, procReader);
+	    	
+	    	code++;
+		}
+		System.out.println("DEBUG - "+processes.size()+" processes were created.");
 		
 	}
 	

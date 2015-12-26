@@ -4,11 +4,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.polito.dp2.WF.ActionStatusReader;
+import it.polito.dp2.WF.Actor;
 import it.polito.dp2.WF.ProcessReader;
 import it.polito.dp2.WF.WorkflowReader;
+import it.polito.dp2.WF.sol2.jaxb.Actors;
 import it.polito.dp2.WF.sol2.jaxb.Process;
 import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
 
@@ -18,7 +22,7 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 	private Calendar startTime;
 	private List<ActionStatusReader> statusActions;
 
-	public ConcreteProcessReader(Process p, WorkflowReader myWF) {
+	public ConcreteProcessReader(Process p, WorkflowReader myWF, Map<String,Actor> actors) {
 		statusActions = new ArrayList<ActionStatusReader>();
 		
 		this.myWorkflow = myWF;
@@ -27,7 +31,7 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 		
 		
 		for( ActionStatus action : p.getActionStatus() ) {
-			ActionStatusReader asr = new ConcreteActionStatusReader( action, myWorkflow.getName() );
+			ActionStatusReader asr = new ConcreteActionStatusReader( action, myWorkflow.getName(), actors );
 			statusActions.add(asr);
 		}
 
