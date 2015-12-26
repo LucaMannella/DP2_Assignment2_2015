@@ -65,7 +65,6 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		// - Processes - //
 		System.out.println("DEBUG - In the document there are "+root.getProcess().size()+" processes");
 		
-		
 		int code = 1;
 		processes = new HashMap<String, ProcessReader>();
 		for( Process p : root.getProcess() ) {
