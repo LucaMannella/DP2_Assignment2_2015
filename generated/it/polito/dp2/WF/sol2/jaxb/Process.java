@@ -2,7 +2,7 @@
 // Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2015.12.23 alle 09:43:14 PM CET 
+// Generato il: 2015.12.26 alle 07:54:46 PM CET 
 //
 
 
@@ -28,30 +28,30 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
  * 
  * <pre>
- * <complexType>
- *   <complexContent>
- *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       <sequence>
- *         <element name="action_status" maxOccurs="unbounded">
- *           <complexType>
- *             <complexContent>
- *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 <attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *                 <attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
- *                 <attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
- *                 <attribute name="isTerminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *                 <attribute name="isTakenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *               </restriction>
- *             </complexContent>
- *           </complexType>
- *         </element>
- *       </sequence>
- *       <attribute name="code" type="{http://www.w3.org/2001/XMLSchema}token" />
- *       <attribute name="started" use="required" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
- *       <attribute name="workflow" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *     </restriction>
- *   </complexContent>
- * </complexType>
+ * &lt;complexType>
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="action_status" maxOccurs="unbounded">
+ *           &lt;complexType>
+ *             &lt;complexContent>
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 &lt;attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *                 &lt;attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *                 &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+ *                 &lt;attribute name="terminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+ *                 &lt;attribute name="takenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+ *               &lt;/restriction>
+ *             &lt;/complexContent>
+ *           &lt;/complexType>
+ *         &lt;/element>
+ *       &lt;/sequence>
+ *       &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *       &lt;attribute name="started" use="required" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+ *       &lt;attribute name="workflow" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
  * </pre>
  * 
  * 
@@ -185,17 +185,17 @@ public class Process {
      * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
      * 
      * <pre>
-     * <complexType>
-     *   <complexContent>
-     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       <attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       <attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       <attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
-     *       <attribute name="isTerminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
-     *       <attribute name="isTakenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
-     *     </restriction>
-     *   </complexContent>
-     * </complexType>
+     * &lt;complexType>
+     *   &lt;complexContent>
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       &lt;attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *       &lt;attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *       &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+     *       &lt;attribute name="terminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+     *       &lt;attribute name="takenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+     *     &lt;/restriction>
+     *   &lt;/complexContent>
+     * &lt;/complexType>
      * </pre>
      * 
      * 
@@ -215,10 +215,10 @@ public class Process {
         @XmlAttribute(name = "timestamp")
         @XmlSchemaType(name = "dateTime")
         protected XMLGregorianCalendar timestamp;
-        @XmlAttribute(name = "isTerminated", required = true)
-        protected boolean isTerminated;
-        @XmlAttribute(name = "isTakenInCharge", required = true)
-        protected boolean isTakenInCharge;
+        @XmlAttribute(name = "terminated", required = true)
+        protected boolean terminated;
+        @XmlAttribute(name = "takenInCharge", required = true)
+        protected boolean takenInCharge;
 
         /**
          * Recupera il valore della proprietà action.
@@ -293,35 +293,35 @@ public class Process {
         }
 
         /**
-         * Recupera il valore della proprietà isTerminated.
+         * Recupera il valore della proprietà terminated.
          * 
          */
-        public boolean isIsTerminated() {
-            return isTerminated;
+        public boolean isTerminated() {
+            return terminated;
         }
 
         /**
-         * Imposta il valore della proprietà isTerminated.
+         * Imposta il valore della proprietà terminated.
          * 
          */
-        public void setIsTerminated(boolean value) {
-            this.isTerminated = value;
+        public void setTerminated(boolean value) {
+            this.terminated = value;
         }
 
         /**
-         * Recupera il valore della proprietà isTakenInCharge.
+         * Recupera il valore della proprietà takenInCharge.
          * 
          */
-        public boolean isIsTakenInCharge() {
-            return isTakenInCharge;
+        public boolean isTakenInCharge() {
+            return takenInCharge;
         }
 
         /**
-         * Imposta il valore della proprietà isTakenInCharge.
+         * Imposta il valore della proprietà takenInCharge.
          * 
          */
-        public void setIsTakenInCharge(boolean value) {
-            this.isTakenInCharge = value;
+        public void setTakenInCharge(boolean value) {
+            this.takenInCharge = value;
         }
 
     }
