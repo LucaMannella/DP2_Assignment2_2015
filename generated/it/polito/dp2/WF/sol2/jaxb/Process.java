@@ -185,17 +185,17 @@ public class Process {
      * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
      * 
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       &lt;attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
-     *       &lt;attribute name="terminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
-     *       &lt;attribute name="takenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *       <attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *       <attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+     *       <attribute name="terminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+     *       <attribute name="takenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      * 
      * 
