@@ -308,7 +308,7 @@ public class WFInfoSerializer {
 				action.setTerminated(asr.isTerminated());
 				
 				if (asr.isTakenInCharge()) {		//was the action assigned?
-					String actor = asr.getActor().getName().replaceAll(" ", "_");
+					String actor = asr.getActor().getName();
 					action.setActor(actor);
 				}
 
@@ -364,7 +364,7 @@ public class WFInfoSerializer {
 		Set<Actors.Actor> actorInDepartment = new HashSet<Actors.Actor>();
 		for (Actor a : actorsSet) {
 			Actors.Actor xmlActor = objFactory.createActorsActor();
-			xmlActor.setName(a.getName().replaceAll(" ", "_"));
+			xmlActor.setName(a.getName());
 			xmlActor.setRole(a.getRole());
 			
 			actorInDepartment.add(xmlActor);
