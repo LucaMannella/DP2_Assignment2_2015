@@ -122,14 +122,14 @@ public class Actors {
      * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
      * 
      * <pre>
-     * <complexType>
-     *   <complexContent>
-     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       <attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       <attribute name="role" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *     </restriction>
-     *   </complexContent>
-     * </complexType>
+     * &lt;complexType>
+     *   &lt;complexContent>
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+     *       &lt;attribute name="role" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *     &lt;/restriction>
+     *   &lt;/complexContent>
+     * &lt;/complexType>
      * </pre>
      * 
      * 
@@ -139,8 +139,6 @@ public class Actors {
     public static class Actor {
 
         @XmlAttribute(name = "name", required = true)
-        @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-        @XmlSchemaType(name = "token")
         protected String name;
         @XmlAttribute(name = "role", required = true)
         @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
