@@ -45,10 +45,16 @@
 			<selector xpath="process" />
 			<field xpath="@code" />
 		</key>
+		
     	<!-- Each department has a unique name !-->
 		<key name="actors_key">			
 			<selector xpath="actors" />
 			<field xpath="@department" />
+		</key>
+		<!-- Each actor has a unique @name !-->
+		<key name="actor_key">			
+			<selector xpath="actor" />
+			<field xpath="@name" />
 		</key>
 	</element>
 	
@@ -117,20 +123,13 @@
 			<sequence>
 				<element name="actor" minOccurs="0" maxOccurs="unbounded">
 					<complexType>
-						<attribute name="name" type="token" use="required" />
+						<attribute name="name" type="string" use="required" />
 						<attribute name="role" type="token" use="required" />
 					</complexType>
 				</element>
 			</sequence>
 			<attribute name="department" type="token" use="optional"/>
 		</complexType>
-		
-		<!-- Each actor has a unique @name !-->
-		<key name="actor_key">			
-			<selector xpath="actor" />
-			<field xpath="@name" />
-		</key>
 	</element>
-	
 	
 </schema>
