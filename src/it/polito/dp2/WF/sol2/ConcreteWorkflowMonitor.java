@@ -52,7 +52,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		
 		workflows = new HashMap<String, WorkflowReader>();
 		for( Workflow wf : root.getWorkflow() ) {
-			WorkflowReader wfReader = new ConcreteWorkflowReader(wf, root);
+			WorkflowReader wfReader = new ConcreteWorkflowReader(wf);
 			workflows.put(wfReader.getName(), wfReader);
 		}
 		// This loop is to managing the ProcessActions
@@ -70,8 +70,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		for( Actors dep : root.getActors() ) {
 			System.out.println("DEBUG - In the department there are "+dep.getActor().size()+" actors");
 			for( Actors.Actor xmlActor : dep.getActor() ) {
-				String actorName = xmlActor.getName().replaceAll("_", " ");
-				Actor a = new Actor(actorName, xmlActor.getRole());
+				Actor a = new Actor(xmlActor.getName(), xmlActor.getRole());
 				actors.put(a.getName(), a);
 			}
 			System.out.println("DEBUG - "+actors.size()+" actors were created.");
@@ -93,6 +92,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		}
 		System.out.println("DEBUG - "+processes.size()+" processes were created.");
 		
+		// set processes inside workflows
 		for( WorkflowReader wf : workflows.values() ) {
 			if(wf instanceof ConcreteWorkflowReader)
 				((ConcreteWorkflowReader)wf).setProcesses(processes.values());

@@ -29,7 +29,7 @@ public class ConcreteWorkflowReader implements WorkflowReader, Comparable<Workfl
 	private Map<String, ActionReader> actions;
 	private Set<ProcessReader> processes;
 	
-	public ConcreteWorkflowReader(Workflow workflow, WorkflowManager root) {		
+	public ConcreteWorkflowReader(Workflow workflow) {		
 		actions = new HashMap<String, ActionReader>();
 		processes = new HashSet<ProcessReader>();
 		

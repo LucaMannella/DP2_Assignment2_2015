@@ -29,7 +29,6 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 //TODO:	if(proc == null) return;	//safety lock
 		this.startTime = p.getStarted().toGregorianCalendar();
 		
-		
 		for( ActionStatus action : p.getActionStatus() ) {
 			ActionStatusReader asr = new ConcreteActionStatusReader( action, myWorkflow.getName(), actors );
 			statusActions.add(asr);
