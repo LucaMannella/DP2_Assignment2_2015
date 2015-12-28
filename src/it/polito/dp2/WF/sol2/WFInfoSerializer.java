@@ -237,7 +237,7 @@ public class WFInfoSerializer {
 
 
 	private void linkSimpleAction(SimpleActionReader actReader, Map<String, ActionType> createdActions) {
-		//TODO: testare
+		//testato, sembra funzionare a dovere
 		ActionType actType = createdActions.get(actReader.getName());
 		
 		// - Creating the SimpleActionReader - //
