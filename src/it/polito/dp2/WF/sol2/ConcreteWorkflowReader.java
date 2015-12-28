@@ -68,7 +68,7 @@ public class ConcreteWorkflowReader implements WorkflowReader, Comparable<Workfl
 		}
 		
 	}
-
+	//TODO: provare a inserire anche qui la hash map
 	public void setProcesses(Collection<ProcessReader> processesSet) { 
 		// set the processes that refer this Workflow
 		for( ProcessReader p : processesSet) {
