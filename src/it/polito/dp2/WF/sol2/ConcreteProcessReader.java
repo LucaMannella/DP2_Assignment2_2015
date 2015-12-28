@@ -4,7 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -12,9 +12,9 @@ import it.polito.dp2.WF.ActionStatusReader;
 import it.polito.dp2.WF.Actor;
 import it.polito.dp2.WF.ProcessReader;
 import it.polito.dp2.WF.WorkflowReader;
-import it.polito.dp2.WF.sol2.jaxb.Actors;
 import it.polito.dp2.WF.sol2.jaxb.Process;
 import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
+import it.polito.dp2.WF.sol2.util.ActionStatusReaderComparator;
 
 public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessReader> {
 
@@ -33,7 +33,8 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 			ActionStatusReader asr = new ConcreteActionStatusReader( action, myWorkflow.getName(), actors );
 			statusActions.add(asr);
 		}
-
+		//FIXME: provo ad ordinare la lista secondo il comparable
+		Collections.sort(statusActions, new ActionStatusReaderComparator());
 	}
 
 	@Override
