@@ -10,7 +10,7 @@ import it.polito.dp2.WF.ActionStatusReader;
 import it.polito.dp2.WF.Actor;
 import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
 
-public class ConcreteActionStatusReader implements ActionStatusReader {
+public class ConcreteActionStatusReader implements ActionStatusReader, Comparable<ActionStatusReader> {
 
 	private String name;
 	private Actor actor;
@@ -28,7 +28,7 @@ public class ConcreteActionStatusReader implements ActionStatusReader {
 		this.terminationTime = new GregorianCalendar();
 			terminationTime.setTimeInMillis(0);			//default value
 		
-		//TODO: attenzione! è possibile che non vada una cazzo nelle actionReader perchè vengono ritornate stringhe e non oggetti... Controllare!!!
+		//TODO: attenzione! è possibile che nelle actionReader vengono ritornate stringhe e non oggetti... Controllare!!!
 		if(takenInCharge) {
 			String actorName = action.getActor();
 			actor = actors.get(actorName);
@@ -82,6 +82,22 @@ public class ConcreteActionStatusReader implements ActionStatusReader {
 			buf.append(" - not taken in charge by anyone");
 
 		return buf.toString();
+	}
+
+	@Override
+	public int compareTo(ActionStatusReader o) {
+		if( terminated && (o.isTerminated()) )
+			return terminationTime.compareTo(o.getTerminationTime());
+		else if( terminated && (!o.isTerminated()) )
+			return -1;
+		else if( (!terminated) && (o.isTerminated()) )
+			return 1;
+		else if( takenInCharge && (!o.isTakenInCharge()))
+			return -1;
+		else if( (!takenInCharge) && (o.isTakenInCharge()) )
+			return 1;
+		else
+			return 0;
 	}
 
 }
