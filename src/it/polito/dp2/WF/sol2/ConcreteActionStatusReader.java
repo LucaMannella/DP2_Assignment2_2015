@@ -8,6 +8,7 @@ import java.util.Map;
 
 import it.polito.dp2.WF.ActionStatusReader;
 import it.polito.dp2.WF.Actor;
+import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
 
 public class ConcreteActionStatusReader implements ActionStatusReader, Comparable<ActionStatusReader> {
@@ -20,8 +21,13 @@ public class ConcreteActionStatusReader implements ActionStatusReader, Comparabl
 
 	public ConcreteActionStatusReader(ActionStatus action, String workflowName, Map<String, Actor> actors) {
 //TODO:	if((action == null) return;	//safety lock
-		String actionID = action.getAction();
-		this.name = actionID.replace(workflowName+"_", "");
+		if( action.getAction() instanceof ActionType ) {
+			ActionType azione = (ActionType) action.getAction();
+			this.name = azione.getName().replace(workflowName+"_", "");
+		}
+		else
+			System.err.println("\n Error! The IDREF does not refer to an ActionType! \n"
+					+ "Impossible to set the name of the ActionStatusReader!");
 		
 		this.takenInCharge = action.isTakenInCharge();
 		this.terminated = action.isTerminated();

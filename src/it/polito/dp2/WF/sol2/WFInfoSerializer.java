@@ -149,8 +149,11 @@ public class WFInfoSerializer {
 		else
 			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createWorkflows() is null or empty!\n");
 		
+		// - Building a workflows hash map - //
+		Map<String, Workflow> workflowsMap = it.polito.dp2.WF.sol2.util.Utility.buildWFMap(createdWorkflows);
+		
 		System.out.println("Processes: "+workflowMonitor.getProcesses());
-		Set<Process> createdProcesses = createProcesses(workflowMonitor.getProcesses());
+		Set<Process> createdProcesses = createProcesses(workflowMonitor.getProcesses(), workflowsMap);
 		if(( createdProcesses != null )&&( !createdProcesses.isEmpty() ))
 			root.getProcess().addAll(createdProcesses);
 		else
@@ -164,6 +167,7 @@ public class WFInfoSerializer {
 		
 		return root;
 	}
+
 
 	/**
 	 * This method converts a set of {@link WorkflowReader} into a set of {@link Workflow}.
@@ -268,9 +272,10 @@ public class WFInfoSerializer {
 	/**
 	 * This method converts a set of {@link ProcessReader} into a set of {@link Process}.
 	 * @param processes - The set of {@link ProcessReader} 
+	 * @param workflowsMap - The set of {@link Workflow} from wich the ActionType were taken.
 	 * @return The set of {@link Process}
 	 */
-	private Set<Process> createProcesses(Set<ProcessReader> processes) {
+	private Set<Process> createProcesses(Set<ProcessReader> processes, Map<String, Workflow> workflowsMap) {
 		int code = 1;
 		Set<Process> newProcesses = new HashSet<Process>();
 	
@@ -298,12 +303,15 @@ public class WFInfoSerializer {
 			process.setStarted(startTime);
 			process.setWorkflow(wfName);
 			
+			Workflow wf = workflowsMap.get(wfName);
+			Map<String, ActionType> wfActionsTypeMap = it.polito.dp2.WF.sol2.util.Utility.buildWFActionsMap(wf.getAction());
+			
 			Set<Process.ActionStatus> newActions = new HashSet<Process.ActionStatus>();
 			// - For each process taking the inner actions - //
 			for ( ActionStatusReader asr : pr.getStatus() ) {
 				Process.ActionStatus action = objFactory.createProcessActionStatus();
 				
-				action.setAction( wfName+"_"+asr.getActionName() );
+				action.setAction( wfActionsTypeMap.get(asr.getActionName()) );	//TODO: to check!
 				action.setTakenInCharge(asr.isTakenInCharge());
 				action.setTerminated(asr.isTerminated());
 				
@@ -342,6 +350,7 @@ public class WFInfoSerializer {
 	
 		return newProcesses;
 	}
+
 
 	private Set<Actors> createActors() {
 		// creating the actors container
