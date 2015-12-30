@@ -39,6 +39,7 @@ import it.polito.dp2.WF.sol2.jaxb.ObjectFactory;
 import it.polito.dp2.WF.sol2.jaxb.Process;
 import it.polito.dp2.WF.sol2.jaxb.Workflow;
 import it.polito.dp2.WF.sol2.jaxb.WorkflowManager;
+import it.polito.dp2.WF.sol2.util.Utility;
 
 public class WFInfoSerializer {
 	
@@ -150,7 +151,7 @@ public class WFInfoSerializer {
 			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createWorkflows() is null or empty!\n");
 		
 		// - Building a workflows hash map - //
-		Map<String, Workflow> workflowsMap = it.polito.dp2.WF.sol2.util.Utility.buildWFMap(createdWorkflows);
+		Map<String, Workflow> workflowsMap = Utility.buildWFMap(createdWorkflows);
 		
 		System.out.println("Processes: "+workflowMonitor.getProcesses());
 		Set<Process> createdProcesses = createProcesses(workflowMonitor.getProcesses(), workflowsMap);
@@ -304,7 +305,7 @@ public class WFInfoSerializer {
 			process.setWorkflow(wfName);
 			
 			Workflow wf = workflowsMap.get(wfName);
-			Map<String, ActionType> wfActionsTypeMap = it.polito.dp2.WF.sol2.util.Utility.buildWFActionsMap(wf.getAction());
+			Map<String, ActionType> wfActionsTypeMap = Utility.buildWFActionsMap(wf.getAction());
 			
 			Set<Process.ActionStatus> newActions = new HashSet<Process.ActionStatus>();
 			// - For each process taking the inner actions - //
