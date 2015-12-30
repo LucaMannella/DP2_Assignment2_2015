@@ -2,7 +2,7 @@
 // Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2015.12.26 alle 07:54:46 PM CET 
+// Generato il: 2015.12.30 alle 11:22:13 PM CET 
 //
 
 
@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -28,30 +29,30 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
  * 
  * <pre>
- * <complexType>
- *   <complexContent>
- *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       <sequence>
- *         <element name="action_status" maxOccurs="unbounded">
- *           <complexType>
- *             <complexContent>
- *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 <attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *                 <attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
- *                 <attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
- *                 <attribute name="terminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *                 <attribute name="takenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *               </restriction>
- *             </complexContent>
- *           </complexType>
- *         </element>
- *       </sequence>
- *       <attribute name="code" type="{http://www.w3.org/2001/XMLSchema}token" />
- *       <attribute name="started" use="required" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
- *       <attribute name="workflow" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
- *     </restriction>
- *   </complexContent>
- * </complexType>
+ * &lt;complexType>
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="action_status" maxOccurs="unbounded">
+ *           &lt;complexType>
+ *             &lt;complexContent>
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 &lt;attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}IDREF" />
+ *                 &lt;attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *                 &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+ *                 &lt;attribute name="terminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+ *                 &lt;attribute name="takenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+ *               &lt;/restriction>
+ *             &lt;/complexContent>
+ *           &lt;/complexType>
+ *         &lt;/element>
+ *       &lt;/sequence>
+ *       &lt;attribute name="code" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *       &lt;attribute name="started" use="required" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+ *       &lt;attribute name="workflow" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
  * </pre>
  * 
  * 
@@ -167,7 +168,7 @@ public class Process {
     }
 
     /**
-     * Imposta il valore della proprietà workflow.
+     * Imposta il valore della propriet� workflow.
      * 
      * @param value
      *     allowed object is
@@ -185,17 +186,17 @@ public class Process {
      * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
      * 
      * <pre>
-     * <complexType>
-     *   <complexContent>
-     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       <attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       <attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
-     *       <attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
-     *       <attribute name="terminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
-     *       <attribute name="takenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
-     *     </restriction>
-     *   </complexContent>
-     * </complexType>
+     * &lt;complexType>
+     *   &lt;complexContent>
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       &lt;attribute name="action" use="required" type="{http://www.w3.org/2001/XMLSchema}IDREF" />
+     *       &lt;attribute name="actor" type="{http://www.w3.org/2001/XMLSchema}token" />
+     *       &lt;attribute name="timestamp" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+     *       &lt;attribute name="terminated" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+     *       &lt;attribute name="takenInCharge" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
+     *     &lt;/restriction>
+     *   &lt;/complexContent>
+     * &lt;/complexType>
      * </pre>
      * 
      * 
@@ -205,9 +206,9 @@ public class Process {
     public static class ActionStatus {
 
         @XmlAttribute(name = "action", required = true)
-        @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-        @XmlSchemaType(name = "token")
-        protected String action;
+        @XmlIDREF
+        @XmlSchemaType(name = "IDREF")
+        protected Object action;
         @XmlAttribute(name = "actor")
         @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
         @XmlSchemaType(name = "token")
@@ -225,10 +226,10 @@ public class Process {
          * 
          * @return
          *     possible object is
-         *     {@link String }
+         *     {@link Object }
          *     
          */
-        public String getAction() {
+        public Object getAction() {
             return action;
         }
 
@@ -237,10 +238,10 @@ public class Process {
          * 
          * @param value
          *     allowed object is
-         *     {@link String }
+         *     {@link Object }
          *     
          */
-        public void setAction(String value) {
+        public void setAction(Object value) {
             this.action = value;
         }
 
