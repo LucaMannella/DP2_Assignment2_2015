@@ -15,45 +15,40 @@
 		
 		<!-- Each workflow has a unique @name !-->
 		<key name="workflow_key">			
-			<selector xpath="workflow" />
+			<selector xpath="wf:workflow" />
 			<field xpath="@name" />
 		</key>
 		<!-- The attribute workflow inside process points to a workflow element !-->
 		<keyref name="workflow_ps_ref" refer="wf:workflow_key">	
-			<selector xpath="process" />
+			<selector xpath="wf:process" />
 			<field xpath="@workflow" />
 		</keyref>
 		<!-- A processAction points to the relatve workflow element !-->
 		<keyref name="workflow_action_ref" refer="wf:workflow_key">	
-			<selector xpath="action/process_action" />
+			<selector xpath="wf:workflow/wf:action/wf:process_action" />
 			<field xpath="@nextProcess" />
 		</keyref>
 		
-		<!-- The attribute action inside an action_status points to an action element !-->
-		<keyref name="action_key_ref" refer="wf:action_key">
-    	    <selector xpath="process/action_status" />
-    	    <field xpath="@action" />
-    	</keyref>
     	<!-- The attribute actor inside action_status points to the relative actor element -->
     	<keyref name="actor_key_ref" refer="wf:actor_key">
-    		<selector xpath="process/action_status" />
+    		<selector xpath="wf:process/wf:action_status" />
     		<field xpath="@actor" />
     	</keyref>
     	
     	<!-- Each process has a unique @code !-->
 		<key name="process_key">			
-			<selector xpath="process" />
+			<selector xpath="wf:process" />
 			<field xpath="@code" />
 		</key>
 		
     	<!-- Each department has a unique name !-->
-		<key name="actors_key">			
-			<selector xpath="actors" />
+		<unique name="unique_department">			
+			<selector xpath="wf:actors" />
 			<field xpath="@department" />
-		</key>
-		<!-- Each actor has a unique @name !-->
+		</unique>
+		<!-- Each actor has a unique name !-->
 		<key name="actor_key">			
-			<selector xpath="actor" />
+			<selector xpath="wf:actors/wf:actor" />
 			<field xpath="@name" />
 		</key>
 	</element>
@@ -66,14 +61,14 @@
 			</sequence>
 			
 			<!-- Può essere una bella idea inserire un riferimento ai processi -->
-			<attribute name="name" type="token" use="required" />	<!-- TODO: Inserire vincolo di univocità -->
+			<attribute name="name" type="token" use="required" />
 		</complexType>
 		
 		<!-- Each key has a unique name inside its workflow -->
-		<key name="action_key">
-			<selector xpath="action" />
+		<unique name="unique_action">
+			<selector xpath="wf:action" />
 			<field xpath="@name" />
-		</key>
+		</unique>
 	</element>
 
 	<complexType name="action_type">
@@ -103,7 +98,7 @@
 			<sequence>
 				<element name="action_status" minOccurs="1" maxOccurs="unbounded">
 					<complexType>
-						<attribute name="action" type="token" use="required" />
+						<attribute name="action" type="IDREF" use="required" />
 						<attribute name="actor" type="token" use="optional" />
 						<attribute name="timestamp" type="dateTime" use="optional" />
 						<attribute name="terminated" type="boolean" use="required" />
