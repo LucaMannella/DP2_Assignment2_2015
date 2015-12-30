@@ -12,9 +12,7 @@ import it.polito.dp2.WF.ActionReader;
 import it.polito.dp2.WF.ProcessReader;
 import it.polito.dp2.WF.WorkflowReader;
 import it.polito.dp2.WF.sol2.jaxb.ActionType;
-import it.polito.dp2.WF.sol2.jaxb.Process;
 import it.polito.dp2.WF.sol2.jaxb.Workflow;
-import it.polito.dp2.WF.sol2.jaxb.WorkflowManager;
 
 /**
  * This is a concrete implementation of the interface WorkflowReader.<br>
