@@ -25,6 +25,12 @@ import it.polito.dp2.WF.sol2.jaxb.Process;
 import it.polito.dp2.WF.sol2.jaxb.Workflow;
 import it.polito.dp2.WF.sol2.jaxb.WorkflowManager;
 
+/**
+ * This is a concrete implementation of the interface WorkflowMonitor based on the JAXB framework.<BR><BR>
+ * If you want more detail about the interface look to {@link it.polito.dp2.WF.WorkflowMonitor}
+ * 
+ * @author Luca
+ */
 public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 	
 	public static final String XSD_NAME = "xsd/WFInfo.xsd";
