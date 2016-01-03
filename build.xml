@@ -139,14 +139,6 @@
 			<param name="outfile" value="${output}" />
 		</antcall>
 	</target>
-	
-	<!-- Target runFuncTest -->
-	<target name="runFuncTest" description="Run all the tests" depends="setseed">
-		<antcall target="runFuncTest.real">
-			<param name="test.class" value="${test.class}" />
-			<param name="exit.code" value="126" />
-		</antcall>
-	</target>
 
 	<!-- Target WFInfoSerializer.test -->
 	<target name="WFInfoSerializer.test" depends="build">
@@ -168,6 +160,14 @@
 		<echo>Done.</echo>
 	</target>
 	
+	<!-- Target runFuncTest -->
+	<target name="runFuncTest" description="Run all the tests" depends="setseed">
+		<antcall target="runFuncTest.real">
+			<param name="test.class" value="${test.class}" />
+			<param name="exit.code" value="126" />
+		</antcall>
+	</target>
+				
 	<target name="runFuncTest.real" depends="build">
 		<tempfile property="temp.dir" destdir="${lab2.location}" prefix="temp"/>
 		<tempfile property="temp.xmlfile" destdir="${temp.dir}" prefix="out" suffix=".xml"/>
