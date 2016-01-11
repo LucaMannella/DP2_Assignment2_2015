@@ -1,20 +1,18 @@
 package it.polito.dp2.WF.sol2;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import it.polito.dp2.WF.ActionStatusReader;
 import it.polito.dp2.WF.Actor;
 import it.polito.dp2.WF.ProcessReader;
 import it.polito.dp2.WF.WorkflowReader;
 import it.polito.dp2.WF.sol2.jaxb.Process;
 import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
-import it.polito.dp2.WF.sol2.util.ActionStatusReaderComparator;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessReader> {
 
@@ -34,7 +32,7 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 			statusActions.add(asr);
 		}
 		//FIXME: provo ad ordinare la lista secondo il comparable
-		Collections.sort(statusActions, new ActionStatusReaderComparator());
+		//Collections.sort(statusActions, new ActionStatusReaderComparator());
 	}
 
 	@Override
