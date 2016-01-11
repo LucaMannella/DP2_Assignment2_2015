@@ -54,7 +54,7 @@ public class WFInfoSerializer {
 
 	/**
 	 * This method create an object {@link WFInfoSerializer} and it transforms its content into an XML file.
-	 * @param args [0] - The name fo the output file
+	 * @param args [0] - The name of the output file
 	 */
 	public static void main(String[] args) {
 		// This class should receive the name of the output file.
