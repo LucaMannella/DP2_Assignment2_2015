@@ -8,6 +8,8 @@ import java.io.PrintStream;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -308,7 +310,7 @@ public class WFInfoSerializer {
 			Workflow wf = workflowsMap.get(wfName);
 			Map<String, ActionType> wfActionsTypeMap = Utility.buildWFActionsMap(wf.getAction());
 			
-			Set<Process.ActionStatus> newActions = new HashSet<Process.ActionStatus>();
+			List<Process.ActionStatus> newActions = new LinkedList<Process.ActionStatus>();
 			// - For each process taking the inner actions - //
 			for ( ActionStatusReader asr : pr.getStatus() ) {
 				Process.ActionStatus action = objFactory.createProcessActionStatus();
