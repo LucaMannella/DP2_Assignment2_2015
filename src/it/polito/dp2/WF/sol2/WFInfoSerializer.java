@@ -44,6 +44,7 @@ import it.polito.dp2.WF.sol2.util.Utility;
 public class WFInfoSerializer {
 	
 	public static final String XSD_NAME = "xsd/WFInfo.xsd";
+	public static final String XSD_LOCATION = "http://lucamannella.altervista.org/WFInfo";
 	public static final String PACKAGE = "it.polito.dp2.WF.sol2.jaxb";
 	
 	private Schema schema;
@@ -401,6 +402,7 @@ public class WFInfoSerializer {
 		/* - Creating the XML document - */			
 		Marshaller m = jc.createMarshaller();
 		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, XSD_LOCATION+" "+XSD_NAME);
 		m.setSchema(schema);
 		m.marshal(root, outputFile);
 	}
