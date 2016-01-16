@@ -107,7 +107,7 @@
 				</element>
 			</sequence>
 			
-			<attribute name="code" type="token" />
+			<attribute name="code" type="wf:ProcessCode" />
 			<attribute name="started" type="dateTime" use="required" /> 
 			<attribute name="workflow" type="token" use="required" />
 		</complexType>
@@ -126,5 +126,11 @@
 			<attribute name="department" type="token" use="optional"/>
 		</complexType>
 	</element>
+	
+	<simpleType name="ProcessCode">
+		<restriction base="token">
+			<pattern value="p[0-9]+" />
+		</restriction>
+	</simpleType>
 	
 </schema>
