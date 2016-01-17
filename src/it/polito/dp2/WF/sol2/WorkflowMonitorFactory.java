@@ -27,6 +27,8 @@ public class WorkflowMonitorFactory extends it.polito.dp2.WF.WorkflowMonitorFact
 		return myMonitor;
 	}
 	
+	//toString() implemented for debugging purposes
+	@Override
 	public String toString(){
 		return "This is a custom WorkflowMonitorFactory implementation for the assignment 2.";
 	}
