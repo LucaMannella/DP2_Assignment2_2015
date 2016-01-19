@@ -9,7 +9,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import it.polito.dp2.WF.ActionReader;
+import it.polito.dp2.WF.ProcessActionReader;
 import it.polito.dp2.WF.ProcessReader;
+import it.polito.dp2.WF.WorkflowMonitor;
 import it.polito.dp2.WF.WorkflowReader;
 import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Workflow;
@@ -66,16 +68,29 @@ public class ConcreteWorkflowReader implements WorkflowReader, Comparable<Workfl
 		}
 		
 	}
-	//TODO: provare a inserire anche qui la hash map
+	
+	//TODO: provare a inserire anche qui la hash map (?)
+	/**
+	 * This method looks if in the processesSet given as parameter there is one or more {@link ProcessReader}
+	 * that belongs to this {@link WorkflowReader}, if they exist, they will be added. 
+	 * 
+	 * @param processesSet - A set of {@link ProcessReader} that you want to analize and set.
+	 */
 	public void setProcesses(Collection<ProcessReader> processesSet) { 
 		// set the processes that refer this Workflow
 		for( ProcessReader p : processesSet) {
 			//if(process.workflowName == workflow.name)
 			if(p.getWorkflow().getName().equals(this.name))
 				processes.add(p);
-		}	
+		}
 	}
 	
+	/**
+	 * This method set inside each {@link ProcessActionReader} of this {@link WorkflowReader}
+	 * the Workflow that will be instantiated after that this action will be completed.
+	 *  
+	 * @param workflows - All the workflows of the {@link WorkflowMonitor}
+	 */
 	public void setWfsInsideProcessActions(HashMap<String, WorkflowReader> workflows) {
 		for( ActionReader actReader : actions.values() ) {
 			
@@ -113,15 +128,15 @@ public class ConcreteWorkflowReader implements WorkflowReader, Comparable<Workfl
 	}
 	
 	public String toString() {
-		StringBuffer buf = new StringBuffer("Workflow: "+name+"\n");
+		StringBuffer buf = new StringBuffer("Workflow Name: "+name+"\n");
 		
-		buf.append("Actions:\n");
+		buf.append("\tActions:\n");
 		for(ActionReader ar : actions.values()) {
-			buf.append("\t"+ar.toString()+"\n");
+			buf.append("\t\t"+ar.toString()+"\n");
 		}
-		buf.append("Processes:\n");
+		buf.append("\tProcesses:\n");
 		for(ProcessReader pr : processes) {
-			buf.append("\t"+pr.toString()+"\n");
+			buf.append("\t\t"+pr.toString()+"\n");
 		}
 		
 		return buf.toString();
