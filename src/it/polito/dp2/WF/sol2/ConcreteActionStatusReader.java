@@ -11,6 +11,11 @@ import it.polito.dp2.WF.Actor;
 import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
 
+/**
+ * This is a concrete implementation of the interface {@link ActionReader} based on the JAXB framework.
+ * 
+ * @author Luca
+ */
 public class ConcreteActionStatusReader implements ActionStatusReader, Comparable<ActionStatusReader> {
 
 	private String name;
@@ -23,6 +28,7 @@ public class ConcreteActionStatusReader implements ActionStatusReader, Comparabl
 //TODO:	if((action == null) return;	//safety lock
 		if( action.getAction() instanceof ActionType ) {
 			ActionType azione = (ActionType) action.getAction();
+			//System.out.println("DEBUG - an ActionStatus will be created: "+azione.getId());
 			this.name = azione.getName().replace(workflowName+"_", "");
 		}
 		else
