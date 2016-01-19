@@ -31,7 +31,7 @@ public class SimpleActionR extends AbstractActionReader implements SimpleActionR
 		
 		ActionType.SimpleAction simpleAction = action.getSimpleAction();
 		if(simpleAction == null)
-			System.err.println("Error! The processAction is null... Something wrong happens!\n");
+			System.err.println("Error! The simpleAction is null... Something wrong happens!\n");
 	}
 
 
@@ -39,11 +39,6 @@ public class SimpleActionR extends AbstractActionReader implements SimpleActionR
 	@Override
 	public Set<ActionReader> getPossibleNextActions() {
 		return new TreeSet<ActionReader>(nextPossibleActions.values());
-	}
-	
-
-	public void addPossibleNextAction(ActionReader ar) {
-		nextPossibleActions.put(ar.getName(), ar);
 	}
 	
 	@Override
@@ -55,20 +50,29 @@ public class SimpleActionR extends AbstractActionReader implements SimpleActionR
 		return super.toString()+"\n\t\t"+buf.toString();
 	}
 
-
-
+	/**
+	 * This method, given all the {@link ActionType} and all the {@link ActionReader} of a certain workflow,
+	 * will set al the possible next actions inside this action.<br>
+	 * <b>Important:</b> this action <b>MUST</b> be present inside the "actions" Map!
+	 * 
+	 * @param nextActions - A List of {@link ActionType} (other elements will be ignored).
+	 * @param actions - A {@link Map} containing all the {@link ActionReader} of one {@link WorkflowReader} element.
+	 */
 	public void setPossibleNextActions(List<Object> nextActions, Map<String,ActionReader> actions) {
 		for(Object o : nextActions) {
-			if(o instanceof ActionType) {
+			if(o instanceof ActionType) {	
 				ActionType action = (ActionType) o;
 				ActionReader nextAction = actions.get(action.getName());
-				nextPossibleActions.put(nextAction.getName(), nextAction);
+				
+				if(nextAction == null)
+					System.err.println("Error! This action is not present inside the actions Map!");
+				else
+					nextPossibleActions.put(nextAction.getName(), nextAction);
 			}
 			else {
-				System.err.println("Error! This is not an ActionType! It will be ignored");
+				System.err.println("Error! An object is not an ActionType! It will be ignored");
 			}
 		}
-		
 	}
 
 }
