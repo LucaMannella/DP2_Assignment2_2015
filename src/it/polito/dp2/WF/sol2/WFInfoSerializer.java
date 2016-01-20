@@ -49,7 +49,6 @@ public class WFInfoSerializer {
 	public static final String XSD_LOCATION = "http://lucamannella.altervista.org/WFInfo";
 	public static final String PACKAGE = "it.polito.dp2.WF.sol2.jaxb";
 	
-	private Schema schema;
 	private JAXBContext jc;
 	private ObjectFactory objFactory;
 	private WorkflowMonitor workflowMonitor;
@@ -88,45 +87,39 @@ public class WFInfoSerializer {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		catch (SAXException e) {
-			System.err.println("Error creating the XML Schema object");
-			e.printStackTrace();
-		}
 		catch (JAXBException e) {
 			System.err.println("Error creating the new instance of the JAXBContent");
 			e.printStackTrace();
+			System.exit(2);
+		}
+		catch(IllegalArgumentException e) {
+			System.err.println("Error, some argument are wrong!");
+			e.printStackTrace();
+			System.exit(3);
 		}
 		catch (FileNotFoundException e) {
 			System.err.println("Error! The file: "+args[0]+" does not exists!");
 			e.printStackTrace();
+			System.exit(4);
 		}
-
+		catch (SAXException e) {
+			System.err.println("Error creating the XML Schema object");
+			e.printStackTrace();
+			System.exit(5);
+		}
 	}
 	
 	
 	/**
 	 * This method create an instance of the WFInfoSerializer.<br>
-	 * The serializer contains an XML {@link Schema} definition, a {@link JAXBContext} and a {@link WorkflowMonitor}.
+	 * The serializer contains a {@link JAXBContext} and a {@link WorkflowMonitor}.
 	 * 
 	 * @throws SAXException
 	 * @throws JAXBException - If an error occurs during the creation of the {@link JAXBContext}
 	 * @throws FactoryConfigurationError - If an error occurs during the creation of the XML {@link Schema} or the {@link WorkflowMonitor}
 	 * @throws WorkflowMonitorException - If an error occurs during the creation of the {@link WorkflowMonitor}
 	 */
-	public WFInfoSerializer() throws  SAXException, JAXBException, FactoryConfigurationError, WorkflowMonitorException{
-		// creating the XML schema to validate the XML file
-		try {
-			schema = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI).newSchema(new File(XSD_NAME));
-		}
-		catch(IllegalArgumentException e) {
-			System.err.println("Error! No implementation of the schema language is available");
-			throw new FactoryConfigurationError("No implementation of the schema language is available");
-		}
-		catch(NullPointerException e) {
-			System.err.println("Error! The instane of the schema or the file of the schema is not well created!\n");
-			throw new SAXException("The schema file is null!");
-		}
-		
+	public WFInfoSerializer() throws JAXBException, WorkflowMonitorException, FactoryConfigurationError {
 		// creating the JAXB context to perform a validation
 		jc = JAXBContext.newInstance(PACKAGE);
 		// creating the root element
@@ -399,8 +392,23 @@ public class WFInfoSerializer {
 	 * @param outputFile - A stream related to the file that you want to write.
 	 * 
 	 * @throws JAXBException - If it is not possible to create the XML file.
+	 * @throws SAXException - If it is not possible to create an XML Schema for validating the output file.
 	 */
-	private void marshallDocument(WorkflowManager root, PrintStream outputFile) throws JAXBException {
+	private void marshallDocument(WorkflowManager root, PrintStream outputFile) throws JAXBException, SAXException, IllegalArgumentException {
+		/* - Creating an instance of the XML Schema - */
+		Schema schema;
+		try {
+			schema = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI).newSchema(new File(XSD_NAME));
+		}
+		catch(IllegalArgumentException e) {
+			System.err.println("Error! No implementation of the schema language is available");
+			throw e;
+		}
+		catch(NullPointerException e) {
+			System.err.println("Error! The instance of the schema or the file of the schema is not well created!\n");
+			throw new SAXException("The schema file is null!");
+		}
+		
 		/* - Creating the XML document - */			
 		Marshaller m = jc.createMarshaller();
 		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
