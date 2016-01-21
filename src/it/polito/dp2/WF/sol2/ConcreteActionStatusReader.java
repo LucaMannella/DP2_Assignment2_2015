@@ -1,15 +1,17 @@
 package it.polito.dp2.WF.sol2;
 
+import it.polito.dp2.WF.ActionStatusReader;
+import it.polito.dp2.WF.Actor;
+import it.polito.dp2.WF.WorkflowReader;
+import it.polito.dp2.WF.sol2.jaxb.ActionType;
+import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Map;
 
-import it.polito.dp2.WF.ActionStatusReader;
-import it.polito.dp2.WF.Actor;
-import it.polito.dp2.WF.sol2.jaxb.ActionType;
-import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
+import javax.xml.bind.JAXBException;
 
 /**
  * This is a concrete implementation of the interface {@link ActionStatusReader} based on the JAXB framework.
@@ -24,15 +26,28 @@ public class ConcreteActionStatusReader implements ActionStatusReader, Comparabl
 	private boolean takenInCharge;
 	private boolean terminated;
 
-	public ConcreteActionStatusReader(ActionStatus action, String workflowName, Map<String, Actor> actors) {
+	/**
+	 * This method create an implementation of a {@link ActionStatusReader} interface. 
+	 * 
+	 * @param action - The {@link ActionStatus} starting object.
+	 * @param workflowName - The name of the {@link WorkflowReader}
+	 * @param act - The {@link Actor} that should perform the action
+	 * @throws JAXBException If the selected actor is not able to perform the action.
+	 */
+	public ConcreteActionStatusReader(ActionStatus action, String workflowName, Actor act) throws JAXBException {
+		String actionRole = null;
+		String actionName = null;
 //TODO:	if((action == null) return;	//safety lock
 		if( action.getAction() instanceof ActionType ) {
 			ActionType azione = (ActionType) action.getAction();
-			//System.out.println("DEBUG - an ActionStatus will be created: "+azione.getId());
-			this.name = azione.getName().replace(workflowName+"_", "");
+			//taking value for an error print
+			actionName = azione.getName();
+			actionRole = azione.getRole();		//used to check the actor role
+			
+			this.name = actionName.replace(workflowName+"_", "");
 		}
 		else
-			System.err.println("\n Error! The IDREF does not refer to an ActionType! \n"
+			System.err.println("Error! The IDREF does not refer to an ActionType! \n"
 					+ "Impossible to set the name of the ActionStatusReader!");
 		
 		this.takenInCharge = action.isTakenInCharge();
@@ -40,13 +55,17 @@ public class ConcreteActionStatusReader implements ActionStatusReader, Comparabl
 		this.terminationTime = new GregorianCalendar();
 			terminationTime.setTimeInMillis(0);			//default value
 		
-		//TODO: attenzione! è possibile che nelle actionReader vengono ritornate stringhe e non oggetti... Controllare!!!
 		if(takenInCharge) {
-			String actorName = action.getActor();
-			actor = actors.get(actorName);
+			this.actor = act;
 			
-			if(actor == null)
-				System.err.println("The actor in the ActionStatusReader: "+name+" is still null... Something wrong in the document!");
+			if(actor == null) { 
+				System.err.println("The actor in the ActionStatusReader: "+name+" is null... Something wrong in the document!");
+			}
+			else if( actor.getRole().equals(actionRole) == false) {
+				String errorMessage = "The actor "+actor.getName()+" is not a "+actionRole+" and he can not execute the action "+actionName+"!"; 
+				System.err.println(errorMessage);
+				throw new JAXBException(errorMessage);
+			}
 		}
 		if(terminated) {
 			this.terminationTime = action.getTimestamp().toGregorianCalendar();
