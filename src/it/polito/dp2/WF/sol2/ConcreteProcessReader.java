@@ -28,7 +28,7 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 	private List<ActionStatusReader> statusActions;
 
 	/**
-	 * This class create an implementation of the {@link ProcessReader} interface.
+	 * This method create an implementation of the {@link ProcessReader} interface.
 	 * @param p - The {@link Process} starting object.
 	 * @param myWF - The {@link WorkflowReader} whom this process belongs.
 	 * @param actors - A map of {@link Actor} with their name as keys.
