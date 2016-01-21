@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+
 /**
  * This is a concrete implementation of the interface {@link ProcessReader} based on the JAXB framework.
  *
@@ -25,19 +27,30 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 	private Calendar startTime;
 	private List<ActionStatusReader> statusActions;
 
-	public ConcreteProcessReader(Process p, WorkflowReader myWF, Map<String,Actor> actors) {
+	/**
+	 * This class create an implementation of the {@link ProcessReader} interface.
+	 * @param p - The {@link Process} starting object.
+	 * @param myWF - The {@link WorkflowReader} whom this process belongs.
+	 * @param actors - A map of {@link Actor} with their name as keys.
+	 * @throws JAXBException - If the selected an actor is not able to perform the action assigned to it.
+	 */
+	public ConcreteProcessReader(Process p, WorkflowReader myWF, Map<String,Actor> actors) throws JAXBException {
 		statusActions = new ArrayList<ActionStatusReader>();
+		Actor actor = null;
 		
 		this.myWorkflow = myWF;
 //TODO:	if(proc == null) return;	//safety lock
 		this.startTime = p.getStarted().toGregorianCalendar();
 		
 		for( ActionStatus action : p.getActionStatus() ) {
-			ActionStatusReader asr = new ConcreteActionStatusReader( action, myWorkflow.getName(), actors );
+			// extract the related actor from the map (if exists) //
+			String actorName = action.getActor();
+			if(actorName != null)
+				actor = actors.get(actorName);
+			
+			ActionStatusReader asr = new ConcreteActionStatusReader( action, myWorkflow.getName(), actor );
 			statusActions.add(asr);
 		}
-		//FIXME: provo ad ordinare la lista secondo il comparable
-		//Collections.sort(statusActions, new ActionStatusReaderComparator());
 	}
 
 	@Override
@@ -76,7 +89,7 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 		buf.append("Started at: "+dateFormat.format(startTime.getTimeInMillis())+"\n");
 		
 		for(ActionStatusReader asr : statusActions) {
-			buf.append(asr.toString()+"\n");
+			buf.append("\t"+asr.toString()+"\n");
 		}
 		return buf.toString();
 	}
