@@ -1,29 +1,6 @@
 package it.polito.dp2.WF.sol2;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
-import org.xml.sax.SAXException;
-
 import it.polito.dp2.WF.ActionReader;
 import it.polito.dp2.WF.ActionStatusReader;
 import it.polito.dp2.WF.Actor;
@@ -43,8 +20,27 @@ import it.polito.dp2.WF.sol2.jaxb.Workflow;
 import it.polito.dp2.WF.sol2.jaxb.WorkflowManager;
 import it.polito.dp2.WF.sol2.util.Utility;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.xml.sax.SAXException;
+
 /**
- * This class serialize a {@link WorkflowMonitor} into an XML file using the JAXP frameowrk.
+ * This class serialize a {@link WorkflowMonitor} into an XML file using the JAXP framework.
  * 
  * @author Luca
  */
@@ -54,7 +50,6 @@ public class WFInfoSerializer {
 	public static final String XSD_LOCATION = "http://lucamannella.altervista.org/WFInfo";
 	public static final String PACKAGE = "it.polito.dp2.WF.sol2.jaxb";
 	
-	private JAXBContext jc;
 	private ObjectFactory objFactory;
 	private WorkflowMonitor workflowMonitor;
 
@@ -119,20 +114,15 @@ public class WFInfoSerializer {
 	 * This method create an instance of the WFInfoSerializer.<br>
 	 * The serializer contains a {@link JAXBContext} and a {@link WorkflowMonitor}.
 	 * 
-	 * @throws JAXBException - If an error occurs during the creation of the {@link JAXBContext}
 	 * @throws FactoryConfigurationError - If an error occurs during the creation of the XML {@link Schema} or the {@link WorkflowMonitor}
 	 * @throws WorkflowMonitorException - If an error occurs during the creation of the {@link WorkflowMonitor}
 	 */
-	public WFInfoSerializer() throws JAXBException, WorkflowMonitorException, FactoryConfigurationError {
-		// creating the JAXB context to perform a validation
-		jc = JAXBContext.newInstance(PACKAGE);
+	public WFInfoSerializer() throws WorkflowMonitorException, FactoryConfigurationError {	
 		// creating the root element
 		workflowMonitor = WorkflowMonitorFactory.newInstance().newWorkflowMonitor();
+		
 		// creating the object factory
 		objFactory = new ObjectFactory();
-		
-		// This element will help to managing the data format (e.g. 2015-10-20T16:12:15+01:00 )
-		//dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 	}
 
 	/**
@@ -144,27 +134,30 @@ public class WFInfoSerializer {
 		WorkflowManager root = objFactory.createWorkflowManager();
 		
 		System.out.println("Workflows: "+workflowMonitor.getWorkflows());
+			// - Adding the workflows to the root element - //
 		Set<Workflow> createdWorkflows = createWorkflows(workflowMonitor.getWorkflows());
 		if(( createdWorkflows != null )&&( !createdWorkflows.isEmpty() ))
 			 root.getWorkflow().addAll(createdWorkflows);
 		else
-			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createWorkflows() is null or empty!\n");
+			System.out.println("\nWARNING [WFInfoSerializer - createWfManager()]: The return value of createWorkflows() is null or empty!\n");
 		
-		// - Building a workflows hash map - //
+			// - Building an hash map of workflow - //
 		Map<String, Workflow> workflowsMap = Utility.buildWFMap(createdWorkflows);
 		
 		System.out.println("Processes: "+workflowMonitor.getProcesses());
+			// - Adding the processes to the root element - //
 		Set<Process> createdProcesses = createProcesses(workflowMonitor.getProcesses(), workflowsMap);
 		if(( createdProcesses != null )&&( !createdProcesses.isEmpty() ))
 			root.getProcess().addAll(createdProcesses);
 		else
-			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createProcesses() is null or empty!\n");
-		
+			System.out.println("\nWARNING [WFInfoSerializer - createWfManager()]: The return value of createProcesses() is null or empty!\n");
+
+			// - Adding the actors to the root element - //
 		Set<Actors> createdActors = createActors();
 		if(( createdActors != null )&&( !createdActors.isEmpty() ))
 			root.getActors().addAll(createdActors);
 		else
-			System.out.println("\nDEBUG [WFInfoSerializer - createWfManager()]: The return value of createActors() is null or empty!\n");
+			System.out.println("\nWARNING [WFInfoSerializer - createWfManager()]: The return value of createActors() is null or empty!\n");
 		
 		return root;
 	}
@@ -177,7 +170,7 @@ public class WFInfoSerializer {
 	 */
 	private Set<Workflow> createWorkflows(Set<WorkflowReader> workflows) { 
 		Set<Workflow> newWorkflows = new HashSet<Workflow>();
-		// /*
+		
 		for( WorkflowReader wf : workflows ) {
 			String wfName = wf.getName();
 			
@@ -186,12 +179,12 @@ public class WFInfoSerializer {
 			workflow.setName(wfName);
 			
 			Map<String, ActionType> newActions = new HashMap<String, ActionType>();
-			// - building all the actions - //
+			// - Building all the actions - //
 			for( ActionReader ar : wf.getActions()) {
 				ActionType newAct = buildActionType(wfName, ar, newActions);
 				newActions.put(newAct.getName(), newAct);
 			}
-			// - linking all the actions - //
+			// - Linking all the actions - //
 			for( ActionReader ar : wf.getActions()) {
 				if(ar instanceof SimpleActionReader) {
 					linkSimpleAction( (SimpleActionReader)ar, newActions );
@@ -201,11 +194,11 @@ public class WFInfoSerializer {
 			if( !newActions.isEmpty() )
 				workflow.getAction().addAll(newActions.values());
 			else
-				System.out.println("\nDEBUG [WFInfoSerializer - createWorkflows()]: The workflow"+wfName+" does not have actions!\n");
+				System.out.println("\nWARNING [WFInfoSerializer - createWorkflows()]: The workflow"+wfName+" does not have actions!\n");
 			
 			newWorkflows.add(workflow);
 		}
-		// */
+		
 		return newWorkflows;
 	}
 
@@ -242,7 +235,6 @@ public class WFInfoSerializer {
 
 
 	private void linkSimpleAction(SimpleActionReader actReader, Map<String, ActionType> createdActions) {
-		//testato, sembra funzionare a dovere
 		ActionType actType = createdActions.get(actReader.getName());
 		
 		// - Creating the SimpleActionReader - //
@@ -254,7 +246,7 @@ public class WFInfoSerializer {
 			if(azioneSuccessiva != null)
 				simpleAction.getNextActions().add(azioneSuccessiva);
 			else
-				System.err.println("Error! Situazione inaspettata! Non esiste l'azione: "+possibleAction.getName());
+				System.err.println("Error! Unexpected situation! There is no action: "+possibleAction.getName());
 				
 		}
 		
@@ -269,7 +261,7 @@ public class WFInfoSerializer {
 	/**
 	 * This method converts a set of {@link ProcessReader} into a set of {@link Process}.
 	 * @param processes - The set of {@link ProcessReader} 
-	 * @param workflowsMap - The set of {@link Workflow} from wich the ActionType were taken.
+	 * @param workflowsMap - The set of {@link Workflow} from which the ActionType were taken.
 	 * @return The set of {@link Process}
 	 */
 	private Set<Process> createProcesses(Set<ProcessReader> processes, Map<String, Workflow> workflowsMap) {
@@ -278,17 +270,7 @@ public class WFInfoSerializer {
 	
 		for (ProcessReader pr: processes) {
 			// - Generating XMLGregorianCalendar - //
-			GregorianCalendar cal = new GregorianCalendar();
-			cal.setTime(pr.getStartTime().getTime());
-			XMLGregorianCalendar startTime = null;
-			try {
-				startTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-			} catch (DatatypeConfigurationException e) {
-				System.err.println("Error! There is a problem with the instantiation of the DatatypeFactory");
-				System.err.println(e.getMessage());
-				e.printStackTrace();
-				//startTime = new XMLGregorianCalendarImpl(cal);
-			}
+			XMLGregorianCalendar startTime = Utility.createXMLGregCalendar(pr.getStartTime());
 			
 			// - Taking the relative workflows name - //
 			String wfName = pr.getWorkflow().getName();
@@ -308,7 +290,7 @@ public class WFInfoSerializer {
 			for ( ActionStatusReader asr : pr.getStatus() ) {
 				Process.ActionStatus action = objFactory.createProcessActionStatus();
 				
-				action.setAction( wfActionsTypeMap.get(asr.getActionName()) );	//TODO: to check!
+				action.setAction( wfActionsTypeMap.get(asr.getActionName()) );
 				action.setTakenInCharge(asr.isTakenInCharge());
 				action.setTerminated(asr.isTerminated());
 				
@@ -318,19 +300,8 @@ public class WFInfoSerializer {
 				}
 
 				if (asr.isTerminated())	{		//was the action completed?
-					// - Generating a new XMLGregorianCalendar - //
-					cal = new GregorianCalendar();
-					cal.setTime(asr.getTerminationTime().getTime());
-					XMLGregorianCalendar endTime = null;
-					try {
-						endTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-					} catch (DatatypeConfigurationException e) {
-						System.err.println("Error! There is a problem with the instantiation of the DatatypeFactory");
-						System.err.println(e.getMessage());
-						e.printStackTrace();
-						//endTime = new XMLGregorianCalendarImpl(cal);
-					}
-					
+					// - Generating a new XMLGregorianCalendar and set it into the action - //
+					XMLGregorianCalendar endTime = Utility.createXMLGregCalendar(asr.getTerminationTime());					
 					action.setTimestamp(endTime);
 				}
 				newActions.add(action);
@@ -339,7 +310,7 @@ public class WFInfoSerializer {
 			if( !newActions.isEmpty() )
 				process.getActionStatus().addAll(newActions);
 			else
-				System.out.println("\nDEBUG [WFInfoSerializer - createProcesses()]: The process p"+code+" does not have actions!\n");
+				System.out.println("\nWarning [WFInfoSerializer - createProcesses()]: The process p"+code+" does not have actions!\n");
 			
 			newProcesses.add(process);
 			code++;
@@ -378,7 +349,7 @@ public class WFInfoSerializer {
 		if( !actorInDepartment.isEmpty() )
 			department.getActor().addAll(actorInDepartment);
 		else
-			System.out.println("\nDEBUG [WFInfoSerializer - createActors()]: The Actors tag has no actor elements!\n");
+			System.out.println("\nWarning [WFInfoSerializer - createActors()]: The Actors tag has no actor elements!\n");
 		
 		newDepartments.add(department);
 		// end of the outer loop
@@ -391,10 +362,13 @@ public class WFInfoSerializer {
 	 * @param root - A {@link WorkflowManager} object
 	 * @param outputFile - A stream related to the file that you want to write.
 	 * 
-	 * @throws JAXBException - If it is not possible to create the XML file.
+	 * @throws JAXBException - If it is not possible to create the JAXB context or the XML file.
 	 * @throws SAXException - If it is not possible to create an XML Schema for validating the output file.
 	 */
 	private void marshallDocument(WorkflowManager root, PrintStream outputFile) throws JAXBException, SAXException, IllegalArgumentException {
+		/* - Creating the JAXB context to perform a validation - */
+		JAXBContext jc = JAXBContext.newInstance(PACKAGE);
+		
 		/* - Creating an instance of the XML Schema - */
 		Schema schema;
 		try {
