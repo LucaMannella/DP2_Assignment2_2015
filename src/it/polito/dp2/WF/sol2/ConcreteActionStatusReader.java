@@ -12,7 +12,7 @@ import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Process.ActionStatus;
 
 /**
- * This is a concrete implementation of the interface {@link ActionReader} based on the JAXB framework.
+ * This is a concrete implementation of the interface {@link ActionStatusReader} based on the JAXB framework.
  * 
  * @author Luca
  */

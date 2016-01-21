@@ -2,19 +2,18 @@ package it.polito.dp2.WF.sol2;
 
 import java.util.HashMap;
 
+import it.polito.dp2.WF.ActionReader;
 import it.polito.dp2.WF.ProcessActionReader;
 import it.polito.dp2.WF.WorkflowReader;
 import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.ActionType.ProcessAction;
 
 /**
- * This is a concrete implementation of abstract class AbstractActionReader (that implements the interface ActionReader).<BR>
- * Another implementation of that abstract class is {@link it.polito.dp2.WF.sol2.SimpleActionR}<br>
- * This implementation is based on JAXB framework.<BR><BR>
- * If you want more detail about the interface look to<BR>
- * {@link it.polito.dp2.WF.sol2.AbstractActionReader}<BR>
- * {@link it.polito.dp2.WF.ActionReader}
- * 
+ * This is a concrete implementation of abstract class {@link AbstractActionReader} (that implements the interface ActionReader).<BR>
+ * Another implementation of that abstract class is {@link SimpleActionR}<br>
+ * This implementation is based on JAXB framework.
+ *
+ * @see {@link ActionReader}, {@link AbstractActionReader}, {@link SimpleActionR}
  * @author Luca
  */
 public class ProcessActionR extends AbstractActionReader implements ProcessActionReader {

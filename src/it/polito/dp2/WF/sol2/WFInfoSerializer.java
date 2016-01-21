@@ -43,6 +43,11 @@ import it.polito.dp2.WF.sol2.jaxb.Workflow;
 import it.polito.dp2.WF.sol2.jaxb.WorkflowManager;
 import it.polito.dp2.WF.sol2.util.Utility;
 
+/**
+ * This class serialize a {@link WorkflowMonitor} into an XML file using the JAXP frameowrk.
+ * 
+ * @author Luca
+ */
 public class WFInfoSerializer {
 	
 	public static final String XSD_NAME = "xsd/WFInfo.xsd";
@@ -114,7 +119,6 @@ public class WFInfoSerializer {
 	 * This method create an instance of the WFInfoSerializer.<br>
 	 * The serializer contains a {@link JAXBContext} and a {@link WorkflowMonitor}.
 	 * 
-	 * @throws SAXException
 	 * @throws JAXBException - If an error occurs during the creation of the {@link JAXBContext}
 	 * @throws FactoryConfigurationError - If an error occurs during the creation of the XML {@link Schema} or the {@link WorkflowMonitor}
 	 * @throws WorkflowMonitorException - If an error occurs during the creation of the {@link WorkflowMonitor}
@@ -134,7 +138,7 @@ public class WFInfoSerializer {
 	/**
 	 * This method create an instance of {@link WorkflowManager} taking the data from the {@link WorkflowMonitor}.
 	 * 
-	 * @return
+	 * @return The root of the XML document as {@link WorkflowManager} object.
 	 */
 	private WorkflowManager createWorkflowManager() {
 		WorkflowManager root = objFactory.createWorkflowManager();
@@ -253,10 +257,6 @@ public class WFInfoSerializer {
 				System.err.println("Error! Situazione inaspettata! Non esiste l'azione: "+possibleAction.getName());
 				
 		}
-
-//		probabilmente l'errore era dovuto al fatto che generare la lista senza riempirla creava problema
-//		if(simpleAction.getNextActions().isEmpty())
-//			System.out.println("\nDEBUG [WFInfoSerializer - createWorkflows()]: The action "+actReader.getName()+" does not have next actions!\n");
 		
 		// - Setting simpleAction & processAction inside the element - //
 		actType.setSimpleAction(simpleAction);

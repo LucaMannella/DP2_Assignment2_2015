@@ -14,6 +14,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is a concrete implementation of the interface {@link ProcessReader} based on the JAXB framework.
+ *
+ * @author Luca
+ */
 public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessReader> {
 
 	private WorkflowReader myWorkflow;
@@ -73,6 +78,21 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 		for(ActionStatusReader asr : statusActions) {
 			buf.append(asr.toString()+"\n");
 		}
+		return buf.toString();
+	}
+	
+	/**
+	 * This method gives a short version of the toString method.
+	 * 
+	 * @return A shorted version of the toStrin method.
+	 */
+	public String toShortString() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+		
+		StringBuffer buf = new StringBuffer("Process started at ");
+		buf.append( dateFormat.format(startTime.getTimeInMillis()) );
+		buf.append(" with "+statusActions.size()+" ActionStatus.");
+		
 		return buf.toString();
 	}
 }

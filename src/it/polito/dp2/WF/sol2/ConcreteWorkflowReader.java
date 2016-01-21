@@ -17,9 +17,7 @@ import it.polito.dp2.WF.sol2.jaxb.ActionType;
 import it.polito.dp2.WF.sol2.jaxb.Workflow;
 
 /**
- * This is a concrete implementation of the interface WorkflowReader.<br>
- * This implementation is based on the JAXB framework.<BR><BR>
- * If you want more detail about the interface look to {@link it.polito.dp2.WF.WorkflowReader}
+ * This is a concrete implementation of the interface {@link WorkflowReader} based on the JAXB framework.
  * 
  * @author Luca
  */
@@ -134,9 +132,21 @@ public class ConcreteWorkflowReader implements WorkflowReader, Comparable<Workfl
 		for(ActionReader ar : actions.values()) {
 			buf.append("\t\t"+ar.toString()+"\n");
 		}
+		
 		buf.append("\tProcesses:\n");
-		for(ProcessReader pr : processes) {
-			buf.append("\t\t"+pr.toString()+"\n");
+		if(processes.isEmpty()){
+			buf.append("\t\t No Processes \n");
+		}
+		else {
+			for(ProcessReader pr : processes) {
+				if(pr instanceof ConcreteProcessReader) {
+					ConcreteProcessReader cpr = (ConcreteProcessReader) pr;
+					buf.append("\t\t"+cpr.toShortString()+"\n");
+				}
+				else {
+					buf.append("\t\t"+pr.toString()+"\n");
+				}
+			}
 		}
 		
 		return buf.toString();
