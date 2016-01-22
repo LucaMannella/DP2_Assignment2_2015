@@ -39,7 +39,8 @@ public class ConcreteProcessReader implements ProcessReader, Comparable<ProcessR
 		Actor actor = null;
 		
 		this.myWorkflow = myWF;
-//TODO:	if(proc == null) return;	//safety lock
+		
+		if((p == null) || (actors==null)) return;	//safety lock
 		this.startTime = p.getStarted().toGregorianCalendar();
 		
 		for( ActionStatus action : p.getActionStatus() ) {
