@@ -27,6 +27,8 @@ public class SimpleActionR extends AbstractActionReader implements SimpleActionR
 		super(action, workflowReader);
 		nextPossibleActions = new HashMap<String, ActionReader>();
 		
+		if(action == null)	return;	//safety lock
+		
 		ActionType.SimpleAction simpleAction = action.getSimpleAction();
 		if(simpleAction == null)
 			System.err.println("Error! The simpleAction is null... Something wrong happens!\n");
