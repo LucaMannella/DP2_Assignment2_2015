@@ -37,7 +37,9 @@ public class ConcreteActionStatusReader implements ActionStatusReader, Comparabl
 	public ConcreteActionStatusReader(ActionStatus action, String workflowName, Actor act) throws JAXBException {
 		String actionRole = null;
 		String actionName = null;
-//TODO:	if((action == null) return;	//safety lock
+		
+		if(action == null) return;	//safety lock
+		
 		if( action.getAction() instanceof ActionType ) {
 			ActionType azione = (ActionType) action.getAction();
 			//taking value for an error print
