@@ -74,7 +74,7 @@ public class ConcreteWorkflowMonitor implements WorkflowMonitor {
 		System.out.println(workflows.size()+" workflows were created.");
 		
 		// - Actors - //	TODO: update this part if you want to manage more departments	
-		System.out.println("DEBUG - In the document there are "+root.getActors().size()+" departments");
+		System.out.println("In the document there are "+root.getActors().size()+" departments");
 		actors = new HashMap<String, Actor> ();
 		
 		// this loop is executed just one time in this particular application
