@@ -31,7 +31,8 @@ public class ConcreteWorkflowReader implements WorkflowReader, Comparable<Workfl
 		actions = new HashMap<String, ActionReader>();
 		processes = new HashSet<ProcessReader>();
 		
-//TODO:	if(workflow == null) return;	//safety lock		
+		if(workflow == null) return;	//safety lock
+		
 		this.name = workflow.getName();
 		
 		// set the actions inside the object
@@ -67,7 +68,6 @@ public class ConcreteWorkflowReader implements WorkflowReader, Comparable<Workfl
 		
 	}
 	
-	//TODO: provare a inserire anche qui la hash map (?)
 	/**
 	 * This method looks if in the processesSet given as parameter there is one or more {@link ProcessReader}
 	 * that belongs to this {@link WorkflowReader}, if they exist, they will be added. 
